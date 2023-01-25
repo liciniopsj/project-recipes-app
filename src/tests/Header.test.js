@@ -18,7 +18,7 @@ describe('Test Header component', () => {
     expect(history.location.pathname).toBe('/meals');
   });
 
-  test('if components render in the page', () => {
+  test('if icons render in the page', () => {
     renderWithRouter(<App />, { initialEntries: ['/meals'] });
 
     const profileImg = screen.getByTestId(PROFILEIMGTESTID);
