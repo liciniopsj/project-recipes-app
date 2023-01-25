@@ -1,7 +1,7 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import renderWithRouter from './helpers/renderWithRouter';
+import { renderWithRouterLegacy } from './helpers/renderWithRouter';
 import App from '../App';
 
 const EMAIL = 'teste@teste.com';
@@ -12,7 +12,7 @@ const PASSWORDTESTID = 'password-input';
 
 describe('Test Login page', () => {
   test('if compoments render in the page', () => {
-    renderWithRouter(<App />);
+    renderWithRouterLegacy(<App />);
 
     const emailInput = screen.getByTestId(EMAILTESTID);
     const passwordInput = screen.getByTestId(PASSWORDTESTID);
@@ -24,7 +24,7 @@ describe('Test Login page', () => {
   });
 
   test('user can type on the login inputs', () => {
-    renderWithRouter(<App />);
+    renderWithRouterLegacy(<App />);
 
     const emailInput = screen.getByTestId(EMAILTESTID);
     const passwordInput = screen.getByTestId(PASSWORDTESTID);
@@ -42,7 +42,7 @@ describe('Test Login page', () => {
   });
 
   test('Login Button behavior', () => {
-    const { history } = renderWithRouter(<App />);
+    const { history } = renderWithRouterLegacy(<App />);
 
     const emailInput = screen.getByTestId(EMAILTESTID);
     const passwordInput = screen.getByTestId(PASSWORDTESTID);
