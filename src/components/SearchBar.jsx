@@ -1,6 +1,14 @@
 import React from 'react';
+import useFetch from '../hooks/useFetch';
 
 function SearchBar() {
+  // const [apiResults, setApiResults] = useState('');
+  const { makeFetch } = useFetch();
+
+  const handleSearchBtn = async () => {
+    const result = await makeFetch('https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=Gin');
+    console.log(result);
+  };
   return (
     <div>
       <input
@@ -37,6 +45,7 @@ function SearchBar() {
       <button
         data-testid="exec-search-btn"
         type="button"
+        onClick={ handleSearchBtn }
       >
         Search
       </button>
