@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import useFetch from '../hooks/useFetch';
 
 function SearchBar() {
@@ -7,18 +8,22 @@ function SearchBar() {
   const [searchType, setSearchType] = useState('ingredient');
   const { makeFetch } = useFetch();
 
+  const history = useHistory();
+
   const handleSearchBtn = async () => {
+    const domain = history.location.pathname === '/meals' ? 'themealdb' : 'thecocktaildb';
+    console.log(domain);
     let url = '';
     if (searchType === 'ingredient') {
-      url = `https://www.themealdb.com/api/json/v1/1/filter.php?i=${searchQuery}`;
+      url = `https://www.${domain}.com/api/json/v1/1/filter.php?i=${searchQuery}`;
     } else if (searchType === 'name') {
-      url = `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchQuery}`;
+      url = `https://www.${domain}.com/api/json/v1/1/search.php?s=${searchQuery}`;
     } else if (searchType === 'first-letter') {
       if (searchQuery.length > 1) {
         global.alert('Your search must have only 1 (one) character');
         return;
       }
-      url = `https://www.themealdb.com/api/json/v1/1/search.php?f=${searchQuery}`;
+      url = `https://www.${domain}.com/api/json/v1/1/search.php?f=${searchQuery}`;
     }
     const result = await makeFetch(url);
     console.log(result);
