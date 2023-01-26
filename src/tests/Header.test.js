@@ -8,40 +8,48 @@ describe('Test Header component', () => {
   const PROFILEIMGTESTID = 'profile-top-btn';
   const SEARCHIMGTESTID = 'search-top-btn';
   const SEARCHBARTESTID = 'search-input';
+  const PAGEROUTE = '/meals';
+  const SWITCHROUTE = '/profile';
+  const PAGETITLE = 'Meals';
+  const SWITCHPAGETITLE = 'Profile';
 
   test('check the app route and title', () => {
-    const { history } = renderWithRouter(<App />, { initialEntries: ['/meals'] });
+    const { history } = renderWithRouter(<App />, { initialEntries: [PAGEROUTE] });
 
-    const pageTitle = screen.getByRole('heading', { level: 1, name: 'Meals' });
+    const pageTitle = screen.getByRole('heading', { level: 1, name: PAGETITLE });
 
     expect(pageTitle).toBeInTheDocument();
-    expect(history.location.pathname).toBe('/meals');
+    expect(history.location.pathname).toBe(PAGEROUTE);
   });
 
   test('if icons render in the page', () => {
-    renderWithRouter(<App />, { initialEntries: ['/meals'] });
+    renderWithRouter(<App />, { initialEntries: [PAGEROUTE] });
 
     const profileImg = screen.getByTestId(PROFILEIMGTESTID);
     const searchImg = screen.getByTestId(SEARCHIMGTESTID);
-    const searchBar = screen.queryByTestId(SEARCHBARTESTID);
+    const hiddenSearchBar = screen.queryByTestId(SEARCHBARTESTID);
 
     expect(profileImg).toBeInTheDocument();
     expect(searchImg).toBeInTheDocument();
-    expect(searchBar).not.toBeInTheDocument();
+    expect(hiddenSearchBar).not.toBeInTheDocument();
 
     userEvent.click(searchImg);
 
+    const searchBar = screen.queryByTestId(SEARCHBARTESTID);
     expect(searchBar).toBeInTheDocument();
   });
 
   test('user get redirected to profile after clicking the profile button', () => {
-    const { history } = renderWithRouter(<App />, { initialEntries: ['/meals'] });
+    const { history } = renderWithRouter(<App />, { initialEntries: [PAGEROUTE] });
 
     const profileImg = screen.getByTestId(PROFILEIMGTESTID);
 
     expect(profileImg).toBeInTheDocument();
 
     userEvent.click(profileImg);
-    expect(history.location.pathname).toBe('/profile');
+    expect(history.location.pathname).toBe(SWITCHROUTE);
+
+    const switchPageTitle = screen.getByRole('heading', { level: 1, name: SWITCHPAGETITLE });
+    expect(switchPageTitle).toBeInTheDocument();
   });
 });

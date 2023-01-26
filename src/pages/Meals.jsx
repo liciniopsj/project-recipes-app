@@ -13,12 +13,6 @@ export default function Meals() {
   };
 
   return (
-    <div>
-      {
-        drawHeader() ? (
-          <Header title="Meals" hasSearchIcon={ drawSearchIcon } />
-        ) : null
-      }
-    </div>
+    drawHeader() ? <Header title="Meals" hasSearchIcon={ drawSearchIcon } /> : null
   );
 }
