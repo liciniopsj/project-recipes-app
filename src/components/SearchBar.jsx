@@ -1,12 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useFetch from '../hooks/useFetch';
 
 function SearchBar() {
   // const [apiResults, setApiResults] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchType, setSearchType] = useState('ingredient');
   const { makeFetch } = useFetch();
 
   const handleSearchBtn = async () => {
-    const result = await makeFetch('https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=Gin');
+    let url = '';
+    if (searchType === 'ingredient') {
+      url = `https://www.themealdb.com/api/json/v1/1/filter.php?i=${searchQuery}`;
+    } else if (searchType === 'name') {
+      url = `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchQuery}`;
+    } else if (searchType === 'first-letter') {
+      if (searchQuery.length > 1) {
+        global.alert('Your search must have only 1 (one) character');
+        return;
+      }
+      url = `https://www.themealdb.com/api/json/v1/1/search.php?f=${searchQuery}`;
+    }
+    const result = await makeFetch(url);
     console.log(result);
   };
   return (
@@ -14,6 +28,8 @@ function SearchBar() {
       <input
         data-testid="search-input"
         type="search"
+        value={ searchQuery }
+        onChange={ ({ target }) => setSearchQuery(target.value) }
       />
       <label htmlFor="ingredient-radio">
         <input
@@ -21,6 +37,9 @@ function SearchBar() {
           type="radio"
           id="ingredient-radio"
           name="search-radio-button-group"
+          onClick={ ({ target }) => setSearchType(target.value) }
+          value="ingredient"
+          defaultChecked
         />
         Ingredient
       </label>
@@ -29,7 +48,9 @@ function SearchBar() {
           data-testid="name-search-radio"
           type="radio"
           id="name-radio"
+          value="name"
           name="search-radio-button-group"
+          onClick={ ({ target }) => setSearchType(target.value) }
         />
         Name
       </label>
@@ -38,7 +59,9 @@ function SearchBar() {
           data-testid="first-letter-search-radio"
           type="radio"
           id="first-letter-radio"
+          value="first-letter"
           name="search-radio-button-group"
+          onClick={ ({ target }) => setSearchType(target.value) }
         />
         First letter
       </label>
