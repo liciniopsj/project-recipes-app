@@ -18,6 +18,7 @@ function SearchBar() {
       url = `https://www.${domain}.com/api/json/v1/1/filter.php?i=${searchQuery}`;
     } else if (searchType === 'name') {
       url = `https://www.${domain}.com/api/json/v1/1/search.php?s=${searchQuery}`;
+      console.log(url);
     } else if (searchType === 'first-letter') {
       if (searchQuery.length > 1) {
         global.alert('Your search must have only 1 (one) character');
@@ -27,6 +28,15 @@ function SearchBar() {
     }
     const result = await makeFetch(url);
     console.log(result);
+    if (result.meals && result.meals.length === 1) {
+      history.push(`${history.location.pathname}/${result.meals[0].idMeal}`);
+    }
+    if (result.drinks && result.drinks.length === 1) {
+      history.push(`${history.location.pathname}/${result.drinks[0].idDrink}`);
+    }
+    if (result.meals === null || result.drinks === null) {
+      global.alert('Sorry, we haven\'t found any recipes for these filters.');
+    }
   };
   return (
     <div>
