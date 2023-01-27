@@ -5,30 +5,27 @@ import userEvent from '@testing-library/user-event';
 import renderWithRouter from './helpers/renderWithRouter';
 import App from '../App';
 import { mockedValueMeals } from './helpers/MockedMeals';
+import { mockedValueDrinks } from './helpers/MockedDrinks';
 import AppProvider from '../context/AppProvider';
 
-const PAGEROUTE = '/meals';
+// const PAGEROUTE = '/meals';
 const SEARCHBTNID = 'search-top-btn';
 
-const mockContext = { meals: [mockedValueMeals.meals[0]], drinks: [] };
-// console.log(mockContext);
+// const mockContextMeal = { meals: [mockedValueMeals.meals[0]], drinks: [] };
+// const mockContextDrink = { drinks: [mockedValueDrinks.drinks[0]], meals: [] };
+const mockCombo = {
+  drinks: [mockedValueDrinks.drinks[0]], meals: [mockedValueMeals.meals[0]] };
+// console.log(mockContextMeal);
 
 beforeEach(async () => {
   global.fetch = jest.fn(() => Promise.resolve({
-    json: () => Promise.resolve({ rates: { CAD: 1.42 } }),
+    json: () => Promise.resolve(mockCombo),
   }));
   // jest.spyOn(global, 'alert');
   global.alert = jest.fn();
-  await act(async () => renderWithRouter(
-    <AppProvider value={ mockContext }><App /></AppProvider>,
-    { initialEntries: [PAGEROUTE] },
-  ));
-
-  const searchBtn = screen.getByTestId(SEARCHBTNID);
-  userEvent.click(searchBtn);
 });
 
-afterEach(() => jest.clearAllMocks());
+// afterEach(() => jest.clearAllMocks());
 const RADIOINGREDIENT = 'ingredient-search-radio';
 const RADIONAME = 'name-search-radio';
 const RADIOFIRSTLETTER = 'first-letter-search-radio';
@@ -38,7 +35,14 @@ const FETCHURLFIRSTLETTER = 'https://www.themealdb.com/api/json/v1/1/search.php?
 const ARRABIATA = 'https://www.themealdb.com/api/json/v1/1/search.php?s=Arrabiata';
 
 describe('Tests of the Header - searchbar functionalities', () => {
-  test('The presence of key components', () => {
+  test('The presence of key components', async () => {
+    await act(async () => renderWithRouter(
+      <AppProvider><App /></AppProvider>,
+      { initialEntries: ['/meals'] },
+    ));
+
+    const searchBtn = screen.getByTestId(SEARCHBTNID);
+    userEvent.click(searchBtn);
     const radioIngredient = screen.getByTestId(RADIOINGREDIENT);
     const radioMame = screen.getByTestId(RADIONAME);
     const radioFirstLetter = screen.getByTestId(RADIOFIRSTLETTER);
@@ -55,6 +59,13 @@ describe('Tests of the Header - searchbar functionalities', () => {
 
 describe('Testing the Search API for meals - By Ingredient', () => {
   test('Search recipes by ingredient', async () => {
+    await act(async () => renderWithRouter(
+      <AppProvider><App /></AppProvider>,
+      { initialEntries: ['/meals'] },
+    ));
+
+    const searchBtn = screen.getByTestId(SEARCHBTNID);
+    userEvent.click(searchBtn);
     const searchBox = screen.getByRole('searchbox');
 
     userEvent.type(searchBox, 'chicken');
@@ -77,6 +88,13 @@ describe('Testing the Search API for meals - By Ingredient', () => {
 
 describe('Testing the Search API for meals - By Name', () => {
   test('Search recipes by name', async () => {
+    await act(async () => renderWithRouter(
+      <AppProvider><App /></AppProvider>,
+      { initialEntries: ['/meals'] },
+    ));
+
+    const searchBtn = screen.getByTestId(SEARCHBTNID);
+    userEvent.click(searchBtn);
     const searchBox = screen.getByRole('searchbox');
 
     userEvent.type(searchBox, 'chicken karaage');
@@ -98,6 +116,13 @@ describe('Testing the Search API for meals - By Name', () => {
 
 describe('Testing the Search API for meals - By First Letter', () => {
   test('Search recipes by name', async () => {
+    await act(async () => renderWithRouter(
+      <AppProvider><App /></AppProvider>,
+      { initialEntries: ['/meals'] },
+    ));
+
+    const searchBtn = screen.getByTestId(SEARCHBTNID);
+    userEvent.click(searchBtn);
     const searchBox = screen.getByRole('searchbox');
 
     userEvent.type(searchBox, 'C');
@@ -116,6 +141,13 @@ describe('Testing the Search API for meals - By First Letter', () => {
     });
   });
   test('Search recipes by name - Alert for more than one letter', async () => {
+    await act(async () => renderWithRouter(
+      <AppProvider><App /></AppProvider>,
+      { initialEntries: ['/meals'] },
+    ));
+
+    const searchBtn = screen.getByTestId(SEARCHBTNID);
+    userEvent.click(searchBtn);
     const searchBox = screen.getByRole('searchbox');
 
     userEvent.type(searchBox, 'xablau');
@@ -135,14 +167,14 @@ describe('Testing the Search API for meals - By First Letter', () => {
 });
 
 describe('Test if app redirects to details page when result has only one result - meals', () => {
-  test.only('it redirects when Arrabiata is searched', async () => {
-    // const { history } = renderWithRouter(
-    //   <AppProvider value={ mockContext }><App /></AppProvider>,
-    //   { initialEntries: [PAGEROUTE] },
-    // );
+  test('it redirects when Arrabiata is searched', async () => {
+    renderWithRouter(
+      <AppProvider><App /></AppProvider>,
+      { initialEntries: ['/meals'] },
+    );
 
-    // const searchBtn = screen.getByTestId(SEARCHBTNID);
-    // userEvent.click(searchBtn);
+    const searchBtn = screen.getByTestId(SEARCHBTNID);
+    userEvent.click(searchBtn);
 
     const searchBox = screen.getByRole('searchbox');
 
@@ -160,10 +192,40 @@ describe('Test if app redirects to details page when result has only one result 
       expect(global.fetch).toHaveBeenCalled();
       expect(global.fetch).toHaveBeenCalledWith(ARRABIATA);
     });
-    const recipeName = screen.findByText(/spicy arrabiata penne/i);
+    const recipeName = await screen.findByText(/spicy arrabiata penne/i);
+    expect(recipeName).toBeInTheDocument();
+  });
+});
+
+describe('Test if app redirects to details page when result has only one result - drinks', () => {
+  test('it redirects when Blue Margarita is searched', async () => {
+    renderWithRouter(
+      <AppProvider><App /></AppProvider>,
+      { initialEntries: ['/drinks'] },
+    );
+
+    const searchBtn = screen.getByTestId(SEARCHBTNID);
+    userEvent.click(searchBtn);
+
+    const searchBox = screen.getByRole('searchbox');
+
+    userEvent.type(searchBox, 'Blue Margarita');
+    expect(searchBox.value).toBe('Blue Margarita');
+
+    const radioName = screen.getByTestId(RADIONAME);
+    userEvent.click(radioName);
+    expect(radioName).toBeChecked();
+
+    const searchBarBtn = screen.getByRole('button', { name: /search/i });
+    await act(async () => userEvent.click(searchBarBtn));
+
+    const BMARGARITAURL = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=Blue Margarita';
+
     await waitFor(async () => {
-      // expect(history.location.pathname).toBe('/meals/52771');
-      expect(recipeName).toBeInTheDocument();
+      expect(global.fetch).toHaveBeenCalled();
+      expect(global.fetch).toHaveBeenCalledWith(BMARGARITAURL);
     });
+    const recipeName = await screen.findByText(/blue margarita/i);
+    expect(recipeName).toBeInTheDocument();
   });
 });

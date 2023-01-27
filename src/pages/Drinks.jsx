@@ -6,7 +6,7 @@ import { AppContext } from '../context/AppProvider';
 
 export default function Drinks() {
   const { resultsApiContext } = useContext(AppContext);
-  console.log(resultsApiContext);
+  // console.log(resultsApiContext);
   const renderLimit = 12;
   const history = useHistory();
   const drawSearchIcon = true;
