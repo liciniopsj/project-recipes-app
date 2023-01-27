@@ -4,8 +4,12 @@ import userEvent from '@testing-library/user-event';
 import renderWithRouter from './helpers/renderWithRouter';
 import App from '../App';
 
-beforeAll(() => jest.spyOn(window, 'fetch'));
+// beforeAll(() => jest.spyOn(window, 'fetch'));
 beforeEach(() => {
+  global.fetch = jest.fn().mockResolvedValue({
+    json: jest.fn().mockResolvedValue({ result: { meals: [], drinks: [] } }),
+  });
+  global.alert = jest.fn();
   const PAGEROUTE = '/meals';
   const SEARCHBTNID = 'search-top-btn';
   renderWithRouter(<App />, { initialEntries: [PAGEROUTE] });
@@ -103,8 +107,6 @@ describe('Testing the Search API for meals - By First Letter', () => {
     });
   });
   test('Search recipes by name - Alert for more than one letter', async () => {
-    // global.alert = jest.fn();
-    jest.spyOn(window, 'alert');
     const searchBox = screen.getByRole('searchbox');
 
     userEvent.type(searchBox, 'xablau');
@@ -117,6 +119,8 @@ describe('Testing the Search API for meals - By First Letter', () => {
     const searchBarBtn = screen.getByRole('button', { name: /search/i });
     userEvent.click(searchBarBtn);
 
-    expect(window.alert).toHaveBeenCalledTimes(1);
+    await waitFor(async () => {
+      expect(window.alert).toHaveBeenCalledTimes(1);
+    });
   });
 });

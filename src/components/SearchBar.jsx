@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import useFetch from '../hooks/useFetch';
 
 function SearchBar() {
-  // const [apiResults, setApiResults] = useState('');
+  const [apiResults, setApiResults] = useState({ meals: [], drinks: [] });
   const [searchQuery, setSearchQuery] = useState('');
   const [searchType, setSearchType] = useState('ingredient');
   const { makeFetch } = useFetch();
@@ -27,14 +27,16 @@ function SearchBar() {
       url = `https://www.${domain}.com/api/json/v1/1/search.php?f=${searchQuery}`;
     }
     const result = await makeFetch(url);
-    console.log(result);
-    if (result.meals && result.meals.length === 1) {
-      history.push(`${history.location.pathname}/${result.meals[0].idMeal}`);
+    setApiResults({ ...apiResults, ...result });
+    // console.log(result);
+    // console.log(apiResults);
+    if (apiResults.meals && apiResults.meals.length === 1) {
+      history.push(`${history.location.pathname}/${apiResults.meals[0].idMeal}`);
     }
-    if (result.drinks && result.drinks.length === 1) {
-      history.push(`${history.location.pathname}/${result.drinks[0].idDrink}`);
+    if (apiResults.drinks && apiResults.drinks.length === 1) {
+      history.push(`${history.location.pathname}/${apiResults.drinks[0].idDrink}`);
     }
-    if (result.meals === null || result.drinks === null) {
+    if (apiResults.meals === null || apiResults.drinks === null) {
       global.alert('Sorry, we haven\'t found any recipes for these filters.');
     }
   };
