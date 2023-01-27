@@ -2,9 +2,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { AppContext } from '../context/AppProvider';
 import useFetch from '../hooks/useFetch';
+// import { mockedValueMeals } from '../tests/helpers/MockedMeals';
 
 function SearchBar() {
-  const { setResultsApiContext } = useContext(AppContext);
+  const { resultsApiContext, setResultsApiContext } = useContext(AppContext);
   const [apiResults, setApiResults] = useState({ meals: [], drinks: [] });
   const [searchQuery, setSearchQuery] = useState('');
   const [searchType, setSearchType] = useState('ingredient');
@@ -14,18 +15,21 @@ function SearchBar() {
 
   useEffect(() => {
     const handleSingleResults = async () => {
-      if (apiResults.meals && apiResults.meals.length === 1) {
-        history.push(`${history.location.pathname}/${apiResults.meals[0].idMeal}`);
+      if (resultsApiContext.meals && resultsApiContext.meals.length === 1) {
+        history.push(`${history.location.pathname}/${resultsApiContext.meals[0].idMeal}`);
       }
-      if (apiResults.drinks && apiResults.drinks.length === 1) {
-        history.push(`${history.location.pathname}/${apiResults.drinks[0].idDrink}`);
+      if (resultsApiContext.drinks && resultsApiContext.drinks.length === 1) {
+        history
+          .push(`${history.location.pathname}/${resultsApiContext.drinks[0].idDrink}`);
       }
-      if (apiResults.meals === null || apiResults.drinks === null) {
+      if (resultsApiContext.meals === null || resultsApiContext.drinks === null) {
         global.alert('Sorry, we haven\'t found any recipes for these filters.');
       }
     };
     handleSingleResults();
-  }, [apiResults]);
+    console.log(resultsApiContext);
+    // console.log(mockedValueMeals);
+  }, [resultsApiContext]);
 
   const handleSearchBtn = async () => {
     const domain = history.location.pathname === '/meals' ? 'themealdb' : 'thecocktaildb';
@@ -46,6 +50,7 @@ function SearchBar() {
     const result = await makeFetch(url);
     setApiResults({ ...apiResults, ...result });
     setResultsApiContext({ ...apiResults, ...result });
+    console.log(resultsApiContext);
   };
   return (
     <div>
