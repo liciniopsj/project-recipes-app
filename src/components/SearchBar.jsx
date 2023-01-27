@@ -25,7 +25,7 @@ function SearchBar() {
       }
     };
     handleSingleResults();
-  }, [apiResults]);
+  }, [apiResults, history]);
 
   const handleSearchBtn = async () => {
     const domain = history.location.pathname === '/meals' ? 'themealdb' : 'thecocktaildb';
