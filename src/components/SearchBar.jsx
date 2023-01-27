@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { AppContext } from '../context/AppProvider';
 import useFetch from '../hooks/useFetch';
 
 function SearchBar() {
+  const { setResultsApiContext } = useContext(AppContext);
   const [apiResults, setApiResults] = useState({ meals: [], drinks: [] });
   const [searchQuery, setSearchQuery] = useState('');
   const [searchType, setSearchType] = useState('ingredient');
@@ -43,6 +45,7 @@ function SearchBar() {
     }
     const result = await makeFetch(url);
     setApiResults({ ...apiResults, ...result });
+    setResultsApiContext({ ...apiResults, ...result });
   };
   return (
     <div>
