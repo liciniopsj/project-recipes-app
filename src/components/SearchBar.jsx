@@ -13,7 +13,6 @@ function SearchBar() {
   useEffect(() => {
     const handleSingleResults = async () => {
       if (apiResults.meals && apiResults.meals.length === 1) {
-        console.log('oi');
         history.push(`${history.location.pathname}/${apiResults.meals[0].idMeal}`);
       }
       if (apiResults.drinks && apiResults.drinks.length === 1) {
@@ -44,17 +43,6 @@ function SearchBar() {
     }
     const result = await makeFetch(url);
     setApiResults({ ...apiResults, ...result });
-    // console.log(result);
-    // console.log(apiResults);
-    // if (apiResults.meals && apiResults.meals.length === 1) {
-    //   history.push(`${history.location.pathname}/${apiResults.meals[0].idMeal}`);
-    // }
-    // if (apiResults.drinks && apiResults.drinks.length === 1) {
-    //   history.push(`${history.location.pathname}/${apiResults.drinks[0].idDrink}`);
-    // }
-    // if (apiResults.meals === null || apiResults.drinks === null) {
-    //   global.alert('Sorry, we haven\'t found any recipes for these filters.');
-    // }
   };
   return (
     <div>
