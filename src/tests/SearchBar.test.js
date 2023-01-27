@@ -6,13 +6,13 @@ import renderWithRouter from './helpers/renderWithRouter';
 import App from '../App';
 import { mockedValueMeals } from './helpers/MockedMeals';
 import { mockedValueDrinks } from './helpers/MockedDrinks';
-import AppProvider from '../context/AppProvider';
+// import AppProvider from '../context/AppProvider';
 
 // const PAGEROUTE = '/meals';
 const SEARCHBTNID = 'search-top-btn';
 
 // const mockContextMeal = { meals: [mockedValueMeals.meals[0]], drinks: [] };
-// const mockContextDrink = { drinks: [mockedValueDrinks.drinks[0]], meals: [] };
+const mockNull = { drinks: [], meals: [] };
 const mockCombo = {
   drinks: [mockedValueDrinks.drinks[0]], meals: [mockedValueMeals.meals[0]] };
 // console.log(mockContextMeal);
@@ -21,11 +21,11 @@ beforeEach(async () => {
   global.fetch = jest.fn(() => Promise.resolve({
     json: () => Promise.resolve(mockCombo),
   }));
-  // jest.spyOn(global, 'alert');
-  global.alert = jest.fn();
+  jest.spyOn(global, 'alert');
+  // global.alert = jest.fn();
 });
 
-// afterEach(() => jest.clearAllMocks());
+afterEach(() => jest.clearAllMocks());
 const RADIOINGREDIENT = 'ingredient-search-radio';
 const RADIONAME = 'name-search-radio';
 const RADIOFIRSTLETTER = 'first-letter-search-radio';
@@ -37,7 +37,7 @@ const ARRABIATA = 'https://www.themealdb.com/api/json/v1/1/search.php?s=Arrabiat
 describe('Tests of the Header - searchbar functionalities', () => {
   test('The presence of key components', async () => {
     await act(async () => renderWithRouter(
-      <AppProvider><App /></AppProvider>,
+      <App />,
       { initialEntries: ['/meals'] },
     ));
 
@@ -60,7 +60,7 @@ describe('Tests of the Header - searchbar functionalities', () => {
 describe('Testing the Search API for meals - By Ingredient', () => {
   test('Search recipes by ingredient', async () => {
     await act(async () => renderWithRouter(
-      <AppProvider><App /></AppProvider>,
+      <App />,
       { initialEntries: ['/meals'] },
     ));
 
@@ -89,7 +89,7 @@ describe('Testing the Search API for meals - By Ingredient', () => {
 describe('Testing the Search API for meals - By Name', () => {
   test('Search recipes by name', async () => {
     await act(async () => renderWithRouter(
-      <AppProvider><App /></AppProvider>,
+      <App />,
       { initialEntries: ['/meals'] },
     ));
 
@@ -117,7 +117,7 @@ describe('Testing the Search API for meals - By Name', () => {
 describe('Testing the Search API for meals - By First Letter', () => {
   test('Search recipes by name', async () => {
     await act(async () => renderWithRouter(
-      <AppProvider><App /></AppProvider>,
+      <App />,
       { initialEntries: ['/meals'] },
     ));
 
@@ -142,7 +142,7 @@ describe('Testing the Search API for meals - By First Letter', () => {
   });
   test('Search recipes by name - Alert for more than one letter', async () => {
     await act(async () => renderWithRouter(
-      <AppProvider><App /></AppProvider>,
+      <App />,
       { initialEntries: ['/meals'] },
     ));
 
@@ -162,6 +162,7 @@ describe('Testing the Search API for meals - By First Letter', () => {
 
     await waitFor(async () => {
       expect(global.alert).toHaveBeenCalledTimes(1);
+      expect(global.alert).toHaveBeenCalledWith('Your search must have only 1 (one) character');
     });
   });
 });
@@ -169,7 +170,7 @@ describe('Testing the Search API for meals - By First Letter', () => {
 describe('Test if app redirects to details page when result has only one result - meals', () => {
   test('it redirects when Arrabiata is searched', async () => {
     renderWithRouter(
-      <AppProvider><App /></AppProvider>,
+      <App />,
       { initialEntries: ['/meals'] },
     );
 
@@ -200,7 +201,7 @@ describe('Test if app redirects to details page when result has only one result 
 describe('Test if app redirects to details page when result has only one result - drinks', () => {
   test('it redirects when Blue Margarita is searched', async () => {
     renderWithRouter(
-      <AppProvider><App /></AppProvider>,
+      <App />,
       { initialEntries: ['/drinks'] },
     );
 
@@ -227,5 +228,31 @@ describe('Test if app redirects to details page when result has only one result 
     });
     const recipeName = await screen.findByText(/blue margarita/i);
     expect(recipeName).toBeInTheDocument();
+  });
+  test('Search recipes by name - Alert for more than one letter', async () => {
+    global.fetch = jest.fn(() => Promise.resolve({
+      json: () => Promise.resolve(mockNull),
+    }));
+    await act(async () => renderWithRouter(
+      <App />,
+      { initialEntries: ['/drinks'] },
+    ));
+
+    const searchBtn = screen.getByTestId(SEARCHBTNID);
+    userEvent.click(searchBtn);
+    const searchBox = screen.getByRole('searchbox');
+
+    userEvent.type(searchBox, 'xablau');
+    expect(searchBox.value).toBe('xablau');
+
+    const radioFirstLetter = screen.getByTestId(RADIOFIRSTLETTER);
+    userEvent.click(radioFirstLetter);
+    expect(radioFirstLetter).toBeChecked();
+
+    const searchBarBtn = screen.getByRole('button', { name: /search/i });
+    userEvent.click(searchBarBtn);
+
+    expect(global.alert).toHaveBeenCalledTimes(1);
+    expect(global.alert).toHaveBeenCalledWith('Your search must have only 1 (one) character');
   });
 });
