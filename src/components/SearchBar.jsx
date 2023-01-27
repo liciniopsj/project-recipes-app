@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import useFetch from '../hooks/useFetch';
 
@@ -9,6 +9,22 @@ function SearchBar() {
   const { makeFetch } = useFetch();
 
   const history = useHistory();
+
+  useEffect(() => {
+    const teste = async () => {
+      if (apiResults.meals && apiResults.meals.length === 1) {
+        console.log('oi');
+        history.push(`${history.location.pathname}/${apiResults.meals[0].idMeal}`);
+      }
+      if (apiResults.drinks && apiResults.drinks.length === 1) {
+        history.push(`${history.location.pathname}/${apiResults.drinks[0].idDrink}`);
+      }
+      if (apiResults.meals === null || apiResults.drinks === null) {
+        global.alert('Sorry, we haven\'t found any recipes for these filters.');
+      }
+    };
+    teste();
+  }, [apiResults]);
 
   const handleSearchBtn = async () => {
     const domain = history.location.pathname === '/meals' ? 'themealdb' : 'thecocktaildb';
@@ -30,15 +46,15 @@ function SearchBar() {
     setApiResults({ ...apiResults, ...result });
     // console.log(result);
     // console.log(apiResults);
-    if (apiResults.meals && apiResults.meals.length === 1) {
-      history.push(`${history.location.pathname}/${apiResults.meals[0].idMeal}`);
-    }
-    if (apiResults.drinks && apiResults.drinks.length === 1) {
-      history.push(`${history.location.pathname}/${apiResults.drinks[0].idDrink}`);
-    }
-    if (apiResults.meals === null || apiResults.drinks === null) {
-      global.alert('Sorry, we haven\'t found any recipes for these filters.');
-    }
+    // if (apiResults.meals && apiResults.meals.length === 1) {
+    //   history.push(`${history.location.pathname}/${apiResults.meals[0].idMeal}`);
+    // }
+    // if (apiResults.drinks && apiResults.drinks.length === 1) {
+    //   history.push(`${history.location.pathname}/${apiResults.drinks[0].idDrink}`);
+    // }
+    // if (apiResults.meals === null || apiResults.drinks === null) {
+    //   global.alert('Sorry, we haven\'t found any recipes for these filters.');
+    // }
   };
   return (
     <div>
