@@ -29,7 +29,7 @@ function SearchBar() {
     handleSingleResults();
     // console.log(resultsApiContext);
     // console.log(mockedValueMeals);
-  }, [resultsApiContext]);
+  }, [history, resultsApiContext]);
 
   const handleSearchBtn = async () => {
     const domain = history.location.pathname === '/meals' ? 'themealdb' : 'thecocktaildb';
