@@ -11,7 +11,7 @@ function SearchBar() {
   const history = useHistory();
 
   useEffect(() => {
-    const teste = async () => {
+    const handleSingleResults = async () => {
       if (apiResults.meals && apiResults.meals.length === 1) {
         console.log('oi');
         history.push(`${history.location.pathname}/${apiResults.meals[0].idMeal}`);
@@ -23,7 +23,7 @@ function SearchBar() {
         global.alert('Sorry, we haven\'t found any recipes for these filters.');
       }
     };
-    teste();
+    handleSingleResults();
   }, [apiResults]);
 
   const handleSearchBtn = async () => {
