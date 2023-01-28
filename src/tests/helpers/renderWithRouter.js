@@ -2,19 +2,25 @@ import React from 'react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { render } from '@testing-library/react';
+import AppProvider from '../../context/AppProvider';
 
 export const renderWithRouterLegacy = (component) => {
   const history = createMemoryHistory();
   return ({
-    ...render(<Router history={ history }>{component}</Router>), history,
+    ...render(
+      <AppProvider><Router history={ history }>{component}</Router></AppProvider>,
+    ),
+    history,
   });
 };
 
 export function withRouter(component, history) {
   return (
-    <Router history={ history }>
-      { component }
-    </Router>
+    <AppProvider>
+      <Router history={ history }>
+        { component }
+      </Router>
+    </AppProvider>
   );
 }
 

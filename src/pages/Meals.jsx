@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import Header from '../components/Header';
+import RecipeCard from '../components/RecipeCard';
+import { AppContext } from '../context/AppProvider';
 
 export default function Meals() {
+  const { resultsApiContext } = useContext(AppContext);
+  const renderLimit = 12;
   const history = useHistory();
   const drawSearchIcon = true;
 
@@ -13,6 +17,17 @@ export default function Meals() {
   };
 
   return (
-    drawHeader() ? <Header title="Meals" hasSearchIcon={ drawSearchIcon } /> : null
+    <div>
+      {drawHeader() ? <Header title="Meals" hasSearchIcon={ drawSearchIcon } /> : null}
+      { resultsApiContext.meals !== null && resultsApiContext.meals
+        .slice(0, renderLimit).map((meal, index) => (
+          <RecipeCard
+            key={ index }
+            recipeName={ meal.strMeal }
+            recipeImg={ meal.strMealThumb }
+            recipeId={ index }
+          />
+        )) }
+    </div>
   );
 }
