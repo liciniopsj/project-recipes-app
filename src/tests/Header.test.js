@@ -13,6 +13,21 @@ describe('Test Header component', () => {
   const PAGETITLE = 'Meals';
   const SWITCHPAGETITLE = 'Profile';
 
+  beforeEach(() => {
+    const setLocalStorage = (id, data) => {
+      window.localStorage.setItem(id, JSON.stringify(data));
+      return data;
+    };
+    jest.spyOn(global, 'fetch');
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue(setLocalStorage('user', 'teste@teste.com')),
+    });
+  });
+
+  afterEach(() => {
+    global.fetch.mockClear();
+  });
+
   test('check the app route and title', () => {
     const { history } = renderWithRouter(<App />, { initialEntries: [PAGEROUTE] });
 
