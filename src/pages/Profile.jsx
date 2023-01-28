@@ -5,7 +5,6 @@ import Header from '../components/Header';
 export default function Profile() {
   const history = useHistory();
   const drawSearchIcon = false;
-  const emailLocal = JSON.parse(localStorage.getItem('user'));
 
   const handleLogout = () => {
     localStorage.removeItem('user');
@@ -14,11 +13,13 @@ export default function Profile() {
 
   return (
     <div>
+      <Header title="Profile" hasSearchIcon={ drawSearchIcon } />
       <div>
-        <Header title="Profile" hasSearchIcon={ drawSearchIcon } />
-      </div>
-      <div>
-        <span data-testid="profile-email">{emailLocal.email}</span>
+        <span
+          data-testid="profile-email"
+        >
+          {JSON.parse(localStorage.getItem('user'))}
+        </span>
       </div>
       <div>
         <button
