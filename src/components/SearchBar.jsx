@@ -1,41 +1,45 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { AppContext } from '../context/AppProvider';
-import useFetch from '../hooks/useFetch';
+// import useFetch from '../hooks/useFetch';
+// import { mockedValueMeals } from '../tests/helpers/MockedMeals';
 
 function SearchBar() {
-  const { setResultsApiContext } = useContext(AppContext);
+  const { resultsApiContext, setResultsApiContext } = useContext(AppContext);
   const [apiResults, setApiResults] = useState({ meals: [], drinks: [] });
   const [searchQuery, setSearchQuery] = useState('');
   const [searchType, setSearchType] = useState('ingredient');
-  const { makeFetch } = useFetch();
+  // const { makeFetch } = useFetch();
 
   const history = useHistory();
 
   useEffect(() => {
     const handleSingleResults = async () => {
-      if (apiResults.meals && apiResults.meals.length === 1) {
-        history.push(`${history.location.pathname}/${apiResults.meals[0].idMeal}`);
+      if (resultsApiContext.meals && resultsApiContext.meals.length === 1) {
+        history.push(`${history.location.pathname}/${resultsApiContext.meals[0].idMeal}`);
       }
-      if (apiResults.drinks && apiResults.drinks.length === 1) {
-        history.push(`${history.location.pathname}/${apiResults.drinks[0].idDrink}`);
+      if (resultsApiContext.drinks && resultsApiContext.drinks.length === 1) {
+        history
+          .push(`${history.location.pathname}/${resultsApiContext.drinks[0].idDrink}`);
       }
-      if (apiResults.meals === null || apiResults.drinks === null) {
+      if (resultsApiContext.meals === null || resultsApiContext.drinks === null) {
         global.alert('Sorry, we haven\'t found any recipes for these filters.');
       }
     };
     handleSingleResults();
-  }, [apiResults, history]);
+    // console.log(resultsApiContext);
+    // console.log(mockedValueMeals);
+  }, [history, resultsApiContext]);
 
   const handleSearchBtn = async () => {
     const domain = history.location.pathname === '/meals' ? 'themealdb' : 'thecocktaildb';
-    console.log(domain);
+    // console.log(domain);
     let url = '';
     if (searchType === 'ingredient') {
       url = `https://www.${domain}.com/api/json/v1/1/filter.php?i=${searchQuery}`;
     } else if (searchType === 'name') {
       url = `https://www.${domain}.com/api/json/v1/1/search.php?s=${searchQuery}`;
-      console.log(url);
+      // console.log(url);
     } else if (searchType === 'first-letter') {
       if (searchQuery.length > 1) {
         global.alert('Your search must have only 1 (one) character');
@@ -43,9 +47,12 @@ function SearchBar() {
       }
       url = `https://www.${domain}.com/api/json/v1/1/search.php?f=${searchQuery}`;
     }
-    const result = await makeFetch(url);
+    const response = await fetch(url);
+    const result = await response.json();
+    console.log(result);
     setApiResults({ ...apiResults, ...result });
     setResultsApiContext({ ...apiResults, ...result });
+    // console.log(resultsApiContext);
   };
   return (
     <div>

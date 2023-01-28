@@ -10,6 +10,7 @@ function useFetch() {
 
       const response = await fetch(url);
       const apiResponse = await response.json();
+      // console.log(apiResponse);
 
       if (!response.ok) {
         const apiError = new Error(

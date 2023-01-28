@@ -7,7 +7,7 @@ import Footer from '../components/Footer';
 
 export default function Drinks() {
   const { resultsApiContext } = useContext(AppContext);
-  console.log(resultsApiContext);
+  // console.log(resultsApiContext);
   const renderLimit = 12;
   const history = useHistory();
   const drawSearchIcon = true;

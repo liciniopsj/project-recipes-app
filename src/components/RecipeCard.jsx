@@ -15,9 +15,9 @@ function RecipeCard({ recipeName, recipeImg, recipeId }) {
 }
 
 RecipeCard.propTypes = {
-  recipeId: PropTypes.string,
-  recipeImg: PropTypes.string,
   recipeName: PropTypes.string,
-}.is.Required;
+  recipeImg: PropTypes.string,
+  recipeId: PropTypes.string,
+}.isRequired;
 
 export default RecipeCard;
