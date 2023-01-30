@@ -48,6 +48,7 @@ export default function Profile() {
           Logout
         </button>
       </div>
+      <Footer />
     </div>
   );
 }

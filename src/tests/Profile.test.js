@@ -21,7 +21,7 @@ describe('Test Profile page', () => {
     global.fetch.mockClear();
   });
 
-  test('', async () => {
+  test('Checks for existence of inputs', async () => {
     await act(async () => renderWithRouter(
       <App />,
       { initialEntries: ['/profile'] },
@@ -35,7 +35,7 @@ describe('Test Profile page', () => {
     expect(favoriteButton).toBeInTheDocument();
     expect(logoutButton).toBeInTheDocument();
   });
-  test('', async () => {
+  test('Done recipes button interaction', async () => {
     await act(async () => renderWithRouter(
       <App />,
       { initialEntries: ['/profile'] },
@@ -53,7 +53,7 @@ describe('Test Profile page', () => {
 
     expect(titleDoneRecipes[0]).toBeInTheDocument();
   });
-  test('', async () => {
+  test('Favorite recipes button interaction', async () => {
     await act(async () => renderWithRouter(
       <App />,
       { initialEntries: ['/profile'] },
@@ -71,7 +71,7 @@ describe('Test Profile page', () => {
 
     expect(titleFavoriteRecipes[0]).toBeInTheDocument();
   });
-  test('', async () => {
+  test('Logout button interaction', async () => {
     await act(async () => renderWithRouter(
       <App />,
       { initialEntries: ['/profile'] },
