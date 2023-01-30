@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import Header from '../components/Header';
 import RecipeCard from '../components/RecipeCard';
 import { AppContext } from '../context/AppProvider';
+import Footer from '../components/Footer';
 
 export default function Meals() {
   const { resultsApiContext } = useContext(AppContext);
@@ -17,17 +18,22 @@ export default function Meals() {
   };
 
   return (
-    <div>
-      {drawHeader() ? <Header title="Meals" hasSearchIcon={ drawSearchIcon } /> : null}
-      { resultsApiContext.meals !== null && resultsApiContext.meals
-        .slice(0, renderLimit).map((meal, index) => (
-          <RecipeCard
-            key={ index }
-            recipeName={ meal.strMeal }
-            recipeImg={ meal.strMealThumb }
-            recipeId={ index }
-          />
-        )) }
-    </div>
+    <>
+      <div>
+        {drawHeader() ? <Header title="Meals" hasSearchIcon={ drawSearchIcon } /> : null}
+        { resultsApiContext.meals !== null && resultsApiContext.meals
+          .slice(0, renderLimit).map((meal, index) => (
+            <RecipeCard
+              key={ index }
+              recipeName={ meal.strMeal }
+              recipeImg={ meal.strMealThumb }
+              recipeId={ index }
+            />
+          )) }
+      </div>
+      {
+        drawHeader() ? <Footer /> : null
+      }
+    </>
   );
 }
