@@ -29,7 +29,7 @@ export default function Meals() {
   };
 
   if (!dataDefault) {
-    return <p>Carregando...</p>;
+    return <p data-testid="loading">Carregando...</p>;
   }
   return (
     <>
