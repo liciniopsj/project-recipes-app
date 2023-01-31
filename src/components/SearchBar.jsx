@@ -22,7 +22,7 @@ function SearchBar() {
         history
           .push(`${history.location.pathname}/${resultsApiContext.drinks[0].idDrink}`);
       }
-      if (!resultsApiContext.drinks || !resultsApiContext.meals) {
+      if (resultsApiContext.meals === null || resultsApiContext.drinks === null) {
         global.alert('Sorry, we haven\'t found any recipes for these filters.');
       }
     };
