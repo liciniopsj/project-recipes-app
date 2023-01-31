@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import Header from '../components/Header';
-import RecipeCard from '../components/RecipeCard';
+import Header from './Header';
+import RecipeCard from './RecipeCard';
 import { AppContext } from '../context/AppProvider';
-import Footer from '../components/Footer';
+import Footer from './Footer';
 
 export default function Meals() {
   const { resultsApiContext } = useContext(AppContext);
