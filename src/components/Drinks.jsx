@@ -41,6 +41,7 @@ export default function Drinks() {
               .slice(0, renderLimit).map((drink, index) => (
                 <RecipeCard
                   key={ index }
+                  recipeRoute={ drink.idDrink }
                   recipeName={ drink.strDrink }
                   recipeImg={ drink.strDrinkThumb }
                   recipeId={ index }
@@ -49,6 +50,7 @@ export default function Drinks() {
               .slice(0, renderLimit).map((drink, index) => (
                 <RecipeCard
                   key={ index }
+                  recipeRoute={ drink.idDrink }
                   recipeName={ drink.strDrink }
                   recipeImg={ drink.strDrinkThumb }
                   recipeId={ index }

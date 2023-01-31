@@ -1,16 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 
-function RecipeCard({ recipeName, recipeImg, recipeId }) {
+function RecipeCard({ recipeName, recipeImg, recipeId, recipeRoute }) {
+  const history = useHistory();
+  const route = (
+    history.location.pathname === '/meals' ? '/meals' : '/drinks');
+
+  // CSS
+  const imgStyle = {
+    width: '350px',
+    height: '600px',
+  };
+
   return (
-    <span data-testid={ `${recipeId}-recipe-card` }>
+    <button
+      onClick={ () => history.push(`${route}/${recipeRoute}`) }
+      data-testid={ `${recipeId}-recipe-card` }
+    >
       <img
         src={ recipeImg }
         alt={ recipeName }
+        style={ imgStyle }
         data-testid={ `${recipeId}-card-img` }
       />
       <p data-testid={ `${recipeId}-card-name` }><strong>{ recipeName }</strong></p>
-    </span>
+    </button>
   );
 }
 
