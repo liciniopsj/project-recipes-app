@@ -22,7 +22,6 @@ function RecipesCarousel({ recipeRecomendations }) {
               </h4>
               <img
                 key={ index }
-                data-testid={ `${index}-recommendation-card` }
                 src={ recomm.strDrinkThumb || recomm.strMealThumb }
                 alt={ recomm.strDrink || recomm.strMeal }
               />
