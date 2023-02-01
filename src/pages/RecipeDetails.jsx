@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import copy from 'clipboard-copy';
 import RecipeDetailsCard from '../components/RecipeDetailsCard';
 
 function RecipeDetails() {
@@ -8,6 +9,7 @@ function RecipeDetails() {
   const [recomm, setRecomm] = useState('');
   const location = useLocation();
   const history = useHistory();
+  const [drawSpan, setDrawSpan] = useState(false);
   console.log('asdasdasd', recipe.idMeal);
   console.log(location);
   const { pathname } = location;
@@ -20,9 +22,14 @@ function RecipeDetails() {
   const recipeId = recipe.idMeal || recipe.idDrink;
 
   // CSS
-  const startRecipebtnStyle = {
+  const buttonStyle = {
     position: 'fixed',
     bottom: '0px',
+  };
+
+  const handleShareBtn = () => {
+    setDrawSpan(!drawSpan);
+    copy(window.location.href);
   };
 
   useEffect(() => {
@@ -72,6 +79,20 @@ function RecipeDetails() {
 
   return (
     <div>
+      <button
+        data-testid="share-btn"
+        onClick={ handleShareBtn }
+      >
+        Share
+      </button>
+      {
+        drawSpan ? <span>Link copied!</span> : null
+      }
+      <button
+        data-testid="favorite-btn"
+      >
+        Favorite
+      </button>
       {/* {foodCheckMeal ? <h1>{recipe.strMeal}</h1> : <h1>{recipe.strDrink}</h1>} */}
       {foodCheckMeal ? (
         <RecipeDetailsCard
@@ -129,16 +150,17 @@ function RecipeDetails() {
           } }
         />
       )}
-      <button
-        style={ startRecipebtnStyle }
-        data-testid="start-recipe-btn"
-        disabled={ isDone }
-        onClick={ () => history.push(`${recipeId}/in-progress`) }
-      >
-        { inProgress !== null ? 'Continue Recipe' : 'Start Recipe' }
+      <span>
+        <button
+          style={ buttonStyle }
+          data-testid="start-recipe-btn"
+          disabled={ isDone }
+          onClick={ () => history.push(`${recipeId}/in-progress`) }
+        >
+          { inProgress !== null ? 'Continue Recipe' : 'Start Recipe' }
 
-      </button>
-
+        </button>
+      </span>
     </div>
   );
 }
