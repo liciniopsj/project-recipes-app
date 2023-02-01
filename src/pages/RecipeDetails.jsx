@@ -20,7 +20,7 @@ function RecipeDetails() {
       const promise = await fetch(recommUrl);
       const data = await promise.json();
       console.log('Recomm', data);
-      setRecomm(data);
+      setRecomm(data.meals || data.drinks);
     };
     const getRecipeMeals = async () => {
       const id = pathname.replace('/meals/', '');
