@@ -4,8 +4,8 @@ import { act } from 'react-dom/test-utils';
 import userEvent from '@testing-library/user-event';
 import renderWithRouter from './helpers/renderWithRouter';
 import App from '../App';
-import { mockedValueMeals } from './helpers/MockedMeals';
-import { mockedValueDrinks } from './helpers/MockedDrinks';
+import { mockedValueMeals } from './helpers/mocks/MockedMeals';
+import { mockedValueDrinks } from './helpers/mocks/MockedDrinks';
 // import AppProvider from '../context/AppProvider';
 
 // const PAGEROUTE = '/meals';

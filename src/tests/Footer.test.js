@@ -4,8 +4,8 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import renderWithRouter from './helpers/renderWithRouter';
 import App from '../App';
-import { mockedDefaultMeals } from './helpers/MockedDefaultMeals';
-import { mockedDefaultDrinks } from './helpers/MockedDefaultDrinks';
+import { mockedDefaultMeals } from './helpers/mocks/MockedDefaultMeals';
+import { mockedDefaultDrinks } from './helpers/mocks/MockedDefaultDrinks';
 
 describe('Test Footer page', () => {
   const email = 'teste@teste.com';
