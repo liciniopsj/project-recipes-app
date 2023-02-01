@@ -1,15 +1,47 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import RecipesCarousel from './RecipesCarousel';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 
-function RecipeDetailsCard({ recipe }) {
+function RecipeDetailsCard({ recipe, handlefavoriteState }) {
   const ingredients = recipe
     .ingredients.filter((e) => e != null && e !== '');
   const measures = recipe
     .measures.filter((e) => e != null && e !== '');
   console.log('video', recipe.video);
+
+  const checkFavorite = () => {
+    if (localStorage.getItem('favoriteRecipes')) {
+      const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
+      console.log('HEART', favoriteRecipes);
+
+      const filteredRecipes = favoriteRecipes.find((favorited) => (
+        favorited.name === recipe.title));
+
+      console.log('FILTERED RECIPES', filteredRecipes);
+
+      if (filteredRecipes && recipe.title === filteredRecipes.name) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
   return (
     <div>
+      <button
+        data-testid="favorite-btn"
+        onClick={ handlefavoriteState }
+        src={ checkFavorite() ? blackHeartIcon : whiteHeartIcon }
+        alt="favoriteButton"
+      >
+        <img
+          src={ checkFavorite() ? blackHeartIcon : whiteHeartIcon }
+          alt="favoriteButton"
+        />
+      </button>
       <h1 data-testid="recipe-title">{recipe.title}</h1>
       <img data-testid="recipe-photo" src={ recipe.photo } alt={ recipe.title } />
       <h3 data-testid="recipe-category">

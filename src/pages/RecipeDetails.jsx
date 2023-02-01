@@ -117,15 +117,10 @@ function RecipeDetails() {
       {
         drawSpan ? <span>Link copied!</span> : null
       }
-      <button
-        data-testid="favorite-btn"
-        onClick={ handleFavoriteBtn }
-      >
-        Favorite
-      </button>
       {/* {foodCheckMeal ? <h1>{recipe.strMeal}</h1> : <h1>{recipe.strDrink}</h1>} */}
       {foodCheckMeal ? (
         <RecipeDetailsCard
+          handlefavoriteState={ handleFavoriteBtn }
           recipe={ {
             photo: recipe.strMealThumb,
             title: recipe.strMeal,
@@ -154,6 +149,7 @@ function RecipeDetails() {
         />
       ) : (
         <RecipeDetailsCard
+          handlefavoriteState={ handleFavoriteBtn }
           recipe={ {
             photo: recipe.strDrinkThumb,
             title: recipe.strDrink,
