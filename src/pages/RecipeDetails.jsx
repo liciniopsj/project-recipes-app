@@ -13,6 +13,14 @@ function RecipeDetails() {
   const drinksCheckMeal = !!pathname.includes('drinks');
   const recommDrinks = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
   const recommMeals = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
+  const isDone = false;
+  const inProgress = JSON.parse(localStorage.getItem('inProgressRecipes'));
+
+  // CSS
+  const startRecipebtnStyle = {
+    position: 'fixed',
+    bottom: '0px',
+  };
 
   useEffect(() => {
     const getRecomm = async () => {
@@ -20,7 +28,7 @@ function RecipeDetails() {
       const promise = await fetch(recommUrl);
       const data = await promise.json();
       console.log('Recomm', data);
-      setRecomm(data);
+      setRecomm(data.meals || data.drinks);
     };
     const getRecipeMeals = async () => {
       const id = pathname.replace('/meals/', '');
@@ -118,6 +126,15 @@ function RecipeDetails() {
           } }
         />
       )}
+      <button
+        style={ startRecipebtnStyle }
+        data-testid="start-recipe-btn"
+        disabled={ isDone }
+      >
+        { !inProgress ? 'Continue Recipe' : 'Start Recipe' }
+
+      </button>
+
     </div>
   );
 }
