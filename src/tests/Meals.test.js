@@ -37,4 +37,11 @@ describe('Test Meals page', () => {
     expect(pageTitle).not.toBeInTheDocument();
     expect(switchPageTitle).toBeInTheDocument();
   });
+
+  test('if filter buttons are drawned correctly', () => {
+    renderWithRouter(<App />, { initialEntries: [PAGEROUTE] });
+
+    const filterBtnAll = screen.getByRole('button', { name: 'All' });
+    expect(filterBtnAll).toBeInTheDocument();
+  });
 });

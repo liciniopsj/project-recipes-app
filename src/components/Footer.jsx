@@ -10,6 +10,8 @@ function Footer() {
   const footerStyle = {
     position: 'fixed',
     bottom: '0px',
+    background: '#ffffff',
+    width: '100%',
   };
 
   return (
