@@ -3,8 +3,8 @@ import { act } from 'react-dom/test-utils';
 import { screen, waitForElementToBeRemoved } from '@testing-library/react';
 import renderWithRouter from './helpers/renderWithRouter';
 import App from '../App';
-import { mockedDefaultDrinks } from './helpers/MockedDefaultDrinks';
-import { mockedDefaultMeals } from './helpers/MockedDefaultMeals';
+import { mockedDefaultDrinks } from './helpers/mocks/MockedDefaultDrinks';
+import { mockedDefaultMeals } from './helpers/mocks/MockedDefaultMeals';
 
 describe('Test Drinks page', () => {
   const PAGEROUTE = '/drinks';

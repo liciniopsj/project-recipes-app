@@ -3,7 +3,7 @@ import { screen, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import renderWithRouter from './helpers/renderWithRouter';
 import App from '../App';
-import { mockedDefaultMeals } from './helpers/MockedDefaultMeals';
+import { mockedDefaultMeals } from './helpers/mocks/MockedDefaultMeals';
 
 describe('Test Header component', () => {
   const PROFILEIMGTESTID = 'profile-top-btn';
