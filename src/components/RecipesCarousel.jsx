@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+import PropTypes from 'prop-types';
 import React from 'react';
 import Slider from 'react-slick';
 
@@ -8,27 +8,37 @@ import 'slick-carousel/slick/slick-theme.css';
 
 function RecipesCarousel({ recipeRecomendations }) {
   console.log('RECOMENDATIONS', recipeRecomendations);
-  // const carouselLimit = 6;
+  const carouselLimit = 6;
   return (
-    <Slider slidesToShow={ 2 }>
+    <Slider infinite={ false } slidesToShow={ 2 }>
       {
-        recipeRecomendations.map((recomm, index) => (
-          <div key={ index }>
-            <h4
-              data-testid={ `${index}-recommendation-title` }
-            >
-              { recomm.strDrink || recomm.strMeal }
-            </h4>
-            <img
-              data-testid={ `${index}-recommendation-card` }
-              src={ recomm.strDrinkThumb || recomm.strMealThumb }
-              alt={ recomm.strDrink || recomm.strMeal }
-            />
-          </div>
-        ))
+        (recipeRecomendations !== ''
+          && recipeRecomendations.slice(0, carouselLimit).map((recomm, index) => (
+            <div data-testid={ `${index}-recommendation-card` } key={ index }>
+              <h4
+                data-testid={ `${index}-recommendation-title` }
+              >
+                { recomm.strDrink || recomm.strMeal }
+              </h4>
+              <img
+                key={ index }
+                data-testid={ `${index}-recommendation-card` }
+                src={ recomm.strDrinkThumb || recomm.strMealThumb }
+                alt={ recomm.strDrink || recomm.strMeal }
+              />
+            </div>
+          ))
+        )
       }
     </Slider>
   );
 }
+
+RecipesCarousel.propTypes = {
+  recipeRecomendations: PropTypes.objectOf({
+    map: PropTypes.func,
+    slice: PropTypes.func,
+  }).isRequired,
+};
 
 export default RecipesCarousel;

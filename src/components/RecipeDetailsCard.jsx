@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import RecipesCarousel from './RecipesCarousel';
+import RecipesCarousel from './RecipesCarousel';
 
 function RecipeDetailsCard({ recipe }) {
   const ingredients = recipe
@@ -41,7 +41,7 @@ function RecipeDetailsCard({ recipe }) {
         />
       ) : null}
 
-      {/* <RecipesCarousel recipeRecomendations={ recipe.recommendation } /> */}
+      <RecipesCarousel recipeRecomendations={ recipe.recommendation } />
 
     </div>
   );
