@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import RecipeDetailsCard from '../components/RecipeDetailsCard';
 
 function RecipeDetails() {
@@ -7,6 +7,8 @@ function RecipeDetails() {
   const [isLoading, setIsLoading] = useState(false);
   const [recomm, setRecomm] = useState('');
   const location = useLocation();
+  const history = useHistory();
+  console.log('asdasdasd', recipe.idMeal);
   console.log(location);
   const { pathname } = location;
   const foodCheckMeal = !!pathname.includes('meals');
@@ -15,6 +17,7 @@ function RecipeDetails() {
   const recommMeals = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
   const isDone = false;
   const inProgress = JSON.parse(localStorage.getItem('inProgressRecipes'));
+  const recipeId = recipe.idMeal || recipe.idDrink;
 
   // CSS
   const startRecipebtnStyle = {
@@ -130,8 +133,9 @@ function RecipeDetails() {
         style={ startRecipebtnStyle }
         data-testid="start-recipe-btn"
         disabled={ isDone }
+        onClick={ () => history.push(`${recipeId}/in-progress`) }
       >
-        { !inProgress ? 'Continue Recipe' : 'Start Recipe' }
+        { inProgress !== null ? 'Continue Recipe' : 'Start Recipe' }
 
       </button>
 

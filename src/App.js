@@ -17,7 +17,8 @@ function App() {
       <Route component={ Profile } path="/profile" />
       <Route component={ DoneRecipes } path="/done-recipes" />
       <Route component={ FavoriteRecipes } path="/favorite-recipes" />
-      <Route component={ InProgress } path="/drinks/:id-da-receita/in-progress" />
+      <Route component={ InProgress } path="/meals/:id/in-progress" />
+      <Route component={ InProgress } path="/drinks/:id/in-progress" />
       <Route path="/meals/:id" component={ RecipeDetails } />
       <Route path="/drinks/:id" component={ RecipeDetails } />
 
