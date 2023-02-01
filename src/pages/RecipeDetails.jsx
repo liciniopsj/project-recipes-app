@@ -20,6 +20,16 @@ function RecipeDetails() {
   const isDone = false;
   const inProgress = JSON.parse(localStorage.getItem('inProgressRecipes'));
   const recipeId = recipe.idMeal || recipe.idDrink;
+  const recipeType = recipe.idMeal ? 'meal' : 'drink';
+
+  const templateObject = {
+    id: recipe.idMeal || recipe.idDrink,
+    type: recipeType,
+    nationality: recipe.strArea || '',
+    category: recipe.strCategory,
+    alcoholicOrNot: recipe.strAlcoholic || '',
+    name: recipe.strMeal || recipe.strDrink,
+    image: recipe.strMealThumb || recipe.strDrinkThumb };
 
   // CSS
   const buttonStyle = {
@@ -30,6 +40,25 @@ function RecipeDetails() {
   const handleShareBtn = () => {
     setDrawSpan(!drawSpan);
     copy(window.location.href);
+  };
+
+  const handleFavoriteBtn = () => {
+    const oldFavorite = [];
+
+    if (localStorage.getItem('favoriteRecipes')) {
+      oldFavorite.push(...JSON.parse(localStorage.getItem('favoriteRecipes')));
+      console.log('OLD FAVORITE 1', oldFavorite);
+    }
+
+    oldFavorite.push(templateObject);
+
+    console.log('OLD FAVORITE 2', oldFavorite);
+
+    localStorage.setItem(
+      'favoriteRecipes',
+      (
+        JSON.stringify(oldFavorite)),
+    );
   };
 
   useEffect(() => {
@@ -73,8 +102,8 @@ function RecipeDetails() {
     getRecomm();
   }, [drinksCheckMeal, foodCheckMeal, location.state, pathname]);
 
-  console.log('Recipe', recipe);
-  console.log('Recomm', recomm);
+  // console.log('Recipe', recipe);
+  // console.log('Recomm', recomm);
   console.log('Loading', isLoading);
 
   return (
@@ -90,6 +119,7 @@ function RecipeDetails() {
       }
       <button
         data-testid="favorite-btn"
+        onClick={ handleFavoriteBtn }
       >
         Favorite
       </button>
