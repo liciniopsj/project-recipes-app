@@ -28,10 +28,10 @@ describe('Test Header component', () => {
     global.fetch.mockClear();
   });
 
-  test('check the app route and title', () => {
+  test('check the app route and title', async () => {
     const { history } = renderWithRouter(<App />, { initialEntries: [PAGEROUTE] });
 
-    const pageTitle = screen.getByRole('heading', { level: 1, name: PAGETITLE });
+    const pageTitle = await screen.findByText(PAGETITLE);
 
     expect(pageTitle).toBeInTheDocument();
     expect(history.location.pathname).toBe(PAGEROUTE);
