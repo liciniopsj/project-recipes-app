@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import copy from 'clipboard-copy';
 import RecipeDetailsCard from '../components/RecipeDetailsCard';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 
 function RecipeDetails() {
   const [recipe, setRecipe] = useState('');
@@ -10,7 +12,16 @@ function RecipeDetails() {
   const location = useLocation();
   const history = useHistory();
   const [drawSpan, setDrawSpan] = useState(false);
-  const [isFavorite, setIsFavorite] = useState();
+  const recipeId = recipe.idMeal || recipe.idDrink;
+  let flavFlag = false;
+  if (localStorage.getItem('favoriteRecipes')) {
+    const favorite = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    flavFlag = favorite
+      .some((fav) => fav.idMeal === recipeId || fav.idDrink === recipeId);
+    console.log('ISFAVORITEFLAG', flavFlag);
+  }
+  const [isFavorite, setIsFavorite] = useState(flavFlag);
+  console.log('ISFAVORITESTATE', isFavorite);
   // console.log(location);
   const { pathname } = location;
   const foodCheckMeal = !!pathname.includes('meals');
@@ -19,7 +30,6 @@ function RecipeDetails() {
   const recommMeals = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
   const isDone = false;
   const inProgress = JSON.parse(localStorage.getItem('inProgressRecipes'));
-  const recipeId = recipe.idMeal || recipe.idDrink;
   const recipeType = recipe.idMeal ? 'meal' : 'drink';
 
   const templateObject = {
@@ -59,7 +69,7 @@ function RecipeDetails() {
       (
         JSON.stringify(oldFavorite)),
     );
-    setIsFavorite(true);
+    setIsFavorite(!isFavorite);
     console.log('ISFAVORITE', isFavorite);
   };
 
@@ -97,20 +107,13 @@ function RecipeDetails() {
         setIsLoading(false);
       }
     };
-    if (localStorage.getItem('favoriteRecipes')) {
-      const favorite = JSON.parse(localStorage.getItem('favoriteRecipes'));
-      const flavFlag = favorite
-        .some((fav) => fav.idMeal === recipeId || fav.idDrink === recipeId);
-      setIsFavorite(flavFlag);
-      console.log('ISFAVORITEFLAG', flavFlag);
-      console.log('ISFAVORITESTATE', isFavorite);
-    }
     // console.log('foodcheck', foodCheckMeal);
     // console.log('drinkcheck', drinksCheckMeal);
     if (foodCheckMeal) getRecipeMeals();
     if (drinksCheckMeal) getRecipeDrinks();
     getRecomm();
-  }, [drinksCheckMeal, foodCheckMeal, isFavorite]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [drinksCheckMeal, foodCheckMeal, isFavorite, setIsFavorite]);
 
   // console.log('Recipe', recipe);
   // console.log('Recomm', recomm);
@@ -124,18 +127,24 @@ function RecipeDetails() {
       >
         Share
       </button>
-      {
-        drawSpan ? <span>Link copied!</span> : null
-      }
       <button
         data-testid="favorite-btn"
         onClick={ handleFavoriteBtn }
+        src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
+        alt="favoriteButton"
       >
-        Favorite
+        <img
+          src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
+          alt="favoriteButton"
+        />
       </button>
+      {
+        drawSpan ? <span>Link copied!</span> : null
+      }
       {/* {foodCheckMeal ? <h1>{recipe.strMeal}</h1> : <h1>{recipe.strDrink}</h1>} */}
       {foodCheckMeal ? (
         <RecipeDetailsCard
+          handlefavoriteState={ handleFavoriteBtn }
           recipe={ {
             photo: recipe.strMealThumb,
             title: recipe.strMeal,
@@ -160,10 +169,12 @@ function RecipeDetails() {
             instructions: recipe.strInstructions,
             video: recipe.strYoutube?.replace('https://www.youtube.com/watch?v=', ''),
             recommendation: recomm,
+            favorite: isFavorite,
           } }
         />
       ) : (
         <RecipeDetailsCard
+          handlefavoriteState={ handleFavoriteBtn }
           recipe={ {
             photo: recipe.strDrinkThumb,
             title: recipe.strDrink,
@@ -187,6 +198,7 @@ function RecipeDetails() {
             video: recipe.strYoutube?.replace('https://www.youtube.com/watch?v=', ''),
             isAlcoholic: recipe.strAlcoholic,
             recommendation: recomm,
+            favorite: isFavorite,
           } }
         />
       )}
