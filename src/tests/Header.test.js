@@ -1,8 +1,9 @@
 import React from 'react';
-import { screen } from '@testing-library/react';
+import { screen, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import renderWithRouter from './helpers/renderWithRouter';
 import App from '../App';
+import { mockedDefaultMeals } from './helpers/MockedDefaultMeals';
 
 describe('Test Header component', () => {
   const PROFILEIMGTESTID = 'profile-top-btn';
@@ -12,6 +13,7 @@ describe('Test Header component', () => {
   const SWITCHROUTE = '/profile';
   const PAGETITLE = 'Meals';
   const SWITCHPAGETITLE = 'Profile';
+  const LOADING = 'Carregando...';
 
   beforeEach(() => {
     const setLocalStorage = (id, data) => {
@@ -20,7 +22,8 @@ describe('Test Header component', () => {
     };
     jest.spyOn(global, 'fetch');
     global.fetch.mockResolvedValue({
-      json: jest.fn().mockResolvedValue(setLocalStorage('user', 'teste@teste.com')),
+      json: jest.fn().mockResolvedValue(setLocalStorage('user', 'teste@teste.com'))
+        .mockResolvedValue(mockedDefaultMeals),
     });
   });
 
@@ -31,14 +34,18 @@ describe('Test Header component', () => {
   test('check the app route and title', async () => {
     const { history } = renderWithRouter(<App />, { initialEntries: [PAGEROUTE] });
 
+    await waitForElementToBeRemoved(() => screen.queryByText(LOADING));
+
     const pageTitle = await screen.findByText(PAGETITLE);
 
     expect(pageTitle).toBeInTheDocument();
     expect(history.location.pathname).toBe(PAGEROUTE);
   });
 
-  test('if icons render in the page', () => {
+  test('if icons render in the page', async () => {
     renderWithRouter(<App />, { initialEntries: [PAGEROUTE] });
+
+    await waitForElementToBeRemoved(() => screen.queryByText(LOADING));
 
     const profileImg = screen.getByTestId(PROFILEIMGTESTID);
     const searchImg = screen.getByTestId(SEARCHIMGTESTID);
@@ -54,8 +61,10 @@ describe('Test Header component', () => {
     expect(searchBar).toBeInTheDocument();
   });
 
-  test('user get redirected to profile after clicking the profile button', () => {
+  test('user get redirected to profile after clicking the profile button', async () => {
     const { history } = renderWithRouter(<App />, { initialEntries: [PAGEROUTE] });
+
+    await waitForElementToBeRemoved(() => screen.queryByText(LOADING));
 
     const profileImg = screen.getByTestId(PROFILEIMGTESTID);
 
