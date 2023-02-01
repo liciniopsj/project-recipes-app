@@ -7,7 +7,7 @@ function RecipeDetailsCard({ recipe }) {
     .ingredients.filter((e) => e != null && e !== '');
   const measures = recipe
     .measures.filter((e) => e != null && e !== '');
-  console.log('video', recipe.video);
+  // console.log('video', recipe.video);
   return (
     <div>
       <h1 data-testid="recipe-title">{recipe.title}</h1>

@@ -10,8 +10,8 @@ function RecipeDetails() {
   const location = useLocation();
   const history = useHistory();
   const [drawSpan, setDrawSpan] = useState(false);
-  console.log('asdasdasd', recipe.idMeal);
-  console.log(location);
+  const [isFavorite, setIsFavorite] = useState();
+  // console.log(location);
   const { pathname } = location;
   const foodCheckMeal = !!pathname.includes('meals');
   const drinksCheckMeal = !!pathname.includes('drinks');
@@ -47,18 +47,20 @@ function RecipeDetails() {
 
     if (localStorage.getItem('favoriteRecipes')) {
       oldFavorite.push(...JSON.parse(localStorage.getItem('favoriteRecipes')));
-      console.log('OLD FAVORITE 1', oldFavorite);
+      // console.log('OLD FAVORITE 1', oldFavorite);
     }
 
     oldFavorite.push(templateObject);
 
-    console.log('OLD FAVORITE 2', oldFavorite);
+    // console.log('OLD FAVORITE 2', oldFavorite);
 
     localStorage.setItem(
       'favoriteRecipes',
       (
         JSON.stringify(oldFavorite)),
     );
+    setIsFavorite(true);
+    console.log('ISFAVORITE', isFavorite);
   };
 
   useEffect(() => {
@@ -66,7 +68,7 @@ function RecipeDetails() {
       const recommUrl = foodCheckMeal ? recommDrinks : recommMeals;
       const promise = await fetch(recommUrl);
       const data = await promise.json();
-      console.log('Recomm', data);
+      // console.log('Recomm', data);
       setRecomm(data.meals || data.drinks);
     };
     const getRecipeMeals = async () => {
@@ -76,7 +78,7 @@ function RecipeDetails() {
         const URL = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
         const promise = await fetch(URL);
         const data = await promise.json();
-        console.log('Data', data.meals[0]);
+        // console.log('Data', data.meals[0]);
         setRecipe(data.meals[0]);
       } finally {
         setIsLoading(false);
@@ -89,18 +91,26 @@ function RecipeDetails() {
         const URL = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
         const promise = await fetch(URL);
         const data = await promise.json();
-        console.log('Data', data.drinks[0]);
+        // console.log('Data', data.drinks[0]);
         setRecipe(data.drinks[0]);
       } finally {
         setIsLoading(false);
       }
     };
-    console.log('foodcheck', foodCheckMeal);
-    console.log('drinkcheck', drinksCheckMeal);
+    if (localStorage.getItem('favoriteRecipes')) {
+      const favorite = JSON.parse(localStorage.getItem('favoriteRecipes'));
+      const flavFlag = favorite
+        .some((fav) => fav.idMeal === recipeId || fav.idDrink === recipeId);
+      setIsFavorite(flavFlag);
+      console.log('ISFAVORITEFLAG', flavFlag);
+      console.log('ISFAVORITESTATE', isFavorite);
+    }
+    // console.log('foodcheck', foodCheckMeal);
+    // console.log('drinkcheck', drinksCheckMeal);
     if (foodCheckMeal) getRecipeMeals();
     if (drinksCheckMeal) getRecipeDrinks();
     getRecomm();
-  }, [drinksCheckMeal, foodCheckMeal, location.state, pathname]);
+  }, [drinksCheckMeal, foodCheckMeal, isFavorite]);
 
   // console.log('Recipe', recipe);
   // console.log('Recomm', recomm);

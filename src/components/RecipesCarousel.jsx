@@ -7,7 +7,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 function RecipesCarousel({ recipeRecomendations }) {
-  console.log('RECOMENDATIONS', recipeRecomendations);
+  // console.log('RECOMENDATIONS', recipeRecomendations);
   const carouselLimit = 6;
   return (
     <Slider infinite={ false } slidesToShow={ 2 }>
