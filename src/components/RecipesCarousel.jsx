@@ -35,10 +35,7 @@ function RecipesCarousel({ recipeRecomendations }) {
 }
 
 RecipesCarousel.propTypes = {
-  recipeRecomendations: PropTypes.objectOf({
-    map: PropTypes.func,
-    slice: PropTypes.func,
-  }).isRequired,
-};
+  recipeRecomendations: PropTypes.array,
+}.isRequired;
 
 export default RecipesCarousel;
