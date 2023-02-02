@@ -79,7 +79,6 @@ function RecipeDetails() {
       const recommUrl = foodCheckMeal ? recommDrinks : recommMeals;
       const promise = await fetch(recommUrl);
       const data = await promise.json();
-      // console.log('Recomm', data);
       setRecomm(data.meals || data.drinks);
     };
     const getRecipeMeals = async () => {
@@ -89,7 +88,6 @@ function RecipeDetails() {
         const URL = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
         const promise = await fetch(URL);
         const data = await promise.json();
-        // console.log('Data', data.meals[0]);
         setRecipe(data.meals[0]);
       } finally {
         setIsLoading(false);
@@ -102,7 +100,6 @@ function RecipeDetails() {
         const URL = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
         const promise = await fetch(URL);
         const data = await promise.json();
-        // console.log('Data', data.drinks[0]);
         setRecipe(data.drinks[0]);
       } finally {
         setIsLoading(false);

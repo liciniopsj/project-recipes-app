@@ -58,7 +58,7 @@ function RecipeInProgress() {
     const amountToChop = -12;
     const currentURL = window.location.href;
     const choppedURL = currentURL.slice(0, amountToChop);
-    console.log('CHOPPED URL', choppedURL);
+    // console.log('CHOPPED URL', choppedURL);
     copy(choppedURL);
   };
 
@@ -124,8 +124,6 @@ function RecipeInProgress() {
           data.meals[0].strMeasure15, data.meals[0].strMeasure16,
           data.meals[0].strMeasure17, data.meals[0].strMeasure18,
           data.meals[0].strMeasure19, data.meals[0].strMeasure20]);
-        console.log('measures', measures);
-        console.log('ingredients', ingredients);
       } finally {
         setIsLoading(false);
       }
