@@ -5,7 +5,7 @@ import RecipeDetails from './pages/RecipeDetails';
 import Profile from './pages/Profile';
 import DoneRecipes from './pages/DoneRecipes';
 import FavoriteRecipes from './pages/FavoriteRecipes';
-import InProgress from './components/InProgress';
+import RecipeInProgress from './pages/RecipeInProgress';
 import Recipes from './pages/Recipes';
 
 function App() {
@@ -17,8 +17,8 @@ function App() {
       <Route component={ Profile } path="/profile" />
       <Route component={ DoneRecipes } path="/done-recipes" />
       <Route component={ FavoriteRecipes } path="/favorite-recipes" />
-      <Route component={ InProgress } path="/meals/:id/in-progress" />
-      <Route component={ InProgress } path="/drinks/:id/in-progress" />
+      <Route component={ RecipeInProgress } path="/meals/:id/in-progress" />
+      <Route component={ RecipeInProgress } path="/drinks/:id/in-progress" />
       <Route path="/meals/:id" component={ RecipeDetails } />
       <Route path="/drinks/:id" component={ RecipeDetails } />
 

@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import copy from 'clipboard-copy';
 import RecipeDetailsCard from '../components/RecipeDetailsCard';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
+import { AppContext } from '../context/AppProvider';
 
 function RecipeDetails() {
+  const { recipeDetailsContext, setRecipeDetailsContext } = useContext(AppContext);
   const [recipe, setRecipe] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [recomm, setRecomm] = useState('');
@@ -18,10 +20,10 @@ function RecipeDetails() {
     const favorite = JSON.parse(localStorage.getItem('favoriteRecipes'));
     flavFlag = favorite
       .some((fav) => fav.idMeal === recipeId || fav.idDrink === recipeId);
-    console.log('ISFAVORITEFLAG', flavFlag);
+    // console.log('ISFAVORITEFLAG', flavFlag);
   }
   const [isFavorite, setIsFavorite] = useState(flavFlag);
-  console.log('ISFAVORITESTATE', isFavorite);
+  // console.log('ISFAVORITESTATE', isFavorite);
   // console.log(location);
   const { pathname } = location;
   const foodCheckMeal = !!pathname.includes('meals');
@@ -70,7 +72,7 @@ function RecipeDetails() {
         JSON.stringify(oldFavorite)),
     );
     setIsFavorite(!isFavorite);
-    console.log('ISFAVORITE', isFavorite);
+    // console.log('ISFAVORITE', isFavorite);
   };
 
   useEffect(() => {
@@ -90,6 +92,7 @@ function RecipeDetails() {
         const data = await promise.json();
         // console.log('Data', data.meals[0]);
         setRecipe(data.meals[0]);
+        setRecipeDetailsContext(data.meals[0]);
       } finally {
         setIsLoading(false);
       }
@@ -103,12 +106,14 @@ function RecipeDetails() {
         const data = await promise.json();
         // console.log('Data', data.drinks[0]);
         setRecipe(data.drinks[0]);
+        setRecipeDetailsContext(data.drinks[0]);
       } finally {
         setIsLoading(false);
       }
     };
     // console.log('foodcheck', foodCheckMeal);
     // console.log('drinkcheck', drinksCheckMeal);
+    console.log('RECIPE DETAIL CTX', recipeDetailsContext);
     if (foodCheckMeal) getRecipeMeals();
     if (drinksCheckMeal) getRecipeDrinks();
     getRecomm();

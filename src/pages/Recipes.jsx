@@ -19,9 +19,9 @@ function Recipes() {
       const url = `https://www.${domain}.com/api/json/v1/1/list.php?c=list`;
       const request = await fetch(url);
       const data = await request.json();
-      console.log('DATA', data);
+      // console.log('DATA', data);
       setDefaultCategory({ ...defaultCategory, ...data });
-      console.log('CATEGORY', defaultCategory);
+      // console.log('CATEGORY', defaultCategory);
     };
     fetchDefaultCategory();
   }, [history.location.pathname]);
