@@ -18,10 +18,10 @@ function RecipeDetails() {
     const favorite = JSON.parse(localStorage.getItem('favoriteRecipes'));
     flavFlag = favorite
       .some((fav) => fav.idMeal === recipeId || fav.idDrink === recipeId);
-    console.log('ISFAVORITEFLAG', flavFlag);
+    // console.log('ISFAVORITEFLAG', flavFlag);
   }
   const [isFavorite, setIsFavorite] = useState(flavFlag);
-  console.log('ISFAVORITESTATE', isFavorite);
+  // console.log('ISFAVORITESTATE', isFavorite);
   // console.log(location);
   const { pathname } = location;
   const foodCheckMeal = !!pathname.includes('meals');
@@ -70,7 +70,7 @@ function RecipeDetails() {
         JSON.stringify(oldFavorite)),
     );
     setIsFavorite(!isFavorite);
-    console.log('ISFAVORITE', isFavorite);
+    // console.log('ISFAVORITE', isFavorite);
   };
 
   useEffect(() => {

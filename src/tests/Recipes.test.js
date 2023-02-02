@@ -1,11 +1,12 @@
 import React from 'react';
 import { screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { act } from 'react-dom/test-utils';
 import userEvent from '@testing-library/user-event';
-import renderWithRouter from './renderWithRouter';
-import App from '../../App';
-import { mockedDefaultMeals } from './mocks/MockedDefaultMeals';
-import { mockedDefaultDrinks } from './mocks/MockedDefaultDrinks';
-import { MockedDrinksCategButtons, MockedMealsCategButtons } from './mocks/MockedCategButtons';
+import renderWithRouter from './helpers/renderWithRouter';
+import App from '../App';
+import { mockedDefaultMeals } from './helpers/mocks/MockedDefaultMeals';
+import { mockedDefaultDrinks } from './helpers/mocks/MockedDefaultDrinks';
+import { MockedDrinksCategButtons, MockedMealsCategButtons } from './helpers/mocks/MockedCategButtons';
 
 describe('Test Recipes page', () => {
   const PAGEROUTE = '/meals';
@@ -37,14 +38,14 @@ describe('Test Recipes page', () => {
 
     expect(beefCateg).toBeInTheDocument();
 
-    userEvent.click(beefCateg);
+    await act(async () => userEvent.click(beefCateg));
 
     const firstCard = screen.getByTestId('0-card-img');
 
     expect(global.fetch).toHaveBeenCalled();
     expect(firstCard).toBeInTheDocument();
 
-    userEvent.click(beefCateg);
+    await act(async () => userEvent.click(beefCateg));
 
     expect(firstCard).toBeInTheDocument();
   });
@@ -58,7 +59,7 @@ describe('Test Recipes page', () => {
 
     expect(allButton).toBeInTheDocument();
 
-    userEvent.click(allButton);
+    await act(async () => userEvent.click(allButton));
 
     const firstCard = screen.getByTestId('1-card-img');
 
@@ -85,14 +86,14 @@ describe('Test Recipes page', () => {
 
     expect(cocktailCateg).toBeInTheDocument();
 
-    userEvent.click(cocktailCateg);
+    await act(async () => userEvent.click(cocktailCateg));
 
     const firstCard = screen.getByTestId('0-card-img');
 
     expect(global.fetch).toHaveBeenCalled();
     expect(firstCard).toBeInTheDocument();
 
-    userEvent.click(cocktailCateg);
+    await act(async () => userEvent.click(cocktailCateg));
 
     expect(firstCard).toBeInTheDocument();
   });

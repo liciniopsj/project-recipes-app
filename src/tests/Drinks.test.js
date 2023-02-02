@@ -1,10 +1,12 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
-import { screen, waitForElementToBeRemoved } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react';
 import renderWithRouter from './helpers/renderWithRouter';
 import App from '../App';
 import { mockedDefaultDrinks } from './helpers/mocks/MockedDefaultDrinks';
 import { mockedDefaultMeals } from './helpers/mocks/MockedDefaultMeals';
+import { mockedDrinksByIngredient } from './helpers/mocks/MockedDrinksSearchByIngredient';
 
 describe('Test Drinks page', () => {
   const PAGEROUTE = '/drinks';
@@ -12,6 +14,7 @@ describe('Test Drinks page', () => {
   const PAGETITLE = 'Drinks';
   const SWITCHPAGETITLE = 'Meals';
   const LOADING = 'Carregando...';
+  const EMAIL = 'teste@teste.com';
 
   beforeEach(() => {
     const setLocalStorage = (id, data) => {
@@ -20,7 +23,7 @@ describe('Test Drinks page', () => {
     };
     jest.spyOn(global, 'fetch');
     global.fetch.mockResolvedValue({
-      json: jest.fn().mockResolvedValue(setLocalStorage('user', 'teste@teste.com'))
+      json: jest.fn().mockResolvedValue(setLocalStorage('user', EMAIL))
         .mockResolvedValue(mockedDefaultDrinks),
     });
   });
@@ -63,7 +66,7 @@ describe('Test Drinks page', () => {
     };
     jest.spyOn(global, 'fetch');
     global.fetch.mockResolvedValue({
-      json: jest.fn().mockResolvedValue(setLocalStorage('user', 'teste@teste.com'))
+      json: jest.fn().mockResolvedValue(setLocalStorage('user', EMAIL))
         .mockResolvedValue(mockedDefaultMeals),
     });
 
@@ -77,5 +80,55 @@ describe('Test Drinks page', () => {
 
     const searchIcon = screen.getByTestId('search-top-btn');
     expect(searchIcon).toBeInTheDocument();
+  });
+
+  test('line 33', async () => {
+    const { history } = renderWithRouter(<App />, { initialEntries: [PAGEROUTE] });
+
+    await waitForElementToBeRemoved(() => screen.queryByText(LOADING));
+
+    const pageTitle = screen.getByRole('heading', { level: 1, name: PAGETITLE });
+    expect(pageTitle).toBeInTheDocument();
+
+    const recipeCard = screen.getByTestId('0-recipe-card');
+    expect(recipeCard).toBeInTheDocument();
+
+    await act(async () => userEvent.click(recipeCard));
+
+    await waitFor(async () => {
+      expect(history.location.pathname).toBe('/drinks/15997');
+    });
+  });
+
+  test('if cards are drawned correctly when a search is made', async () => {
+    renderWithRouter(<App />, { initialEntries: [PAGEROUTE] });
+
+    await waitForElementToBeRemoved(() => screen.queryByText(LOADING));
+
+    const submitQueryBtn = screen.getByRole('button', { name: /submit query/i });
+    expect(submitQueryBtn).toBeInTheDocument();
+
+    await act(async () => userEvent.click(submitQueryBtn));
+
+    const searchbox = screen.getByTestId('search-input');
+    expect(searchbox).toBeInTheDocument();
+
+    await act(async () => userEvent.type(searchbox, 'Ginger ale'));
+
+    const setLocalStorage = (id, data) => {
+      window.localStorage.setItem(id, JSON.stringify(data));
+      return data;
+    };
+    jest.spyOn(global, 'fetch');
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue(setLocalStorage('user', EMAIL))
+        .mockResolvedValue(mockedDrinksByIngredient),
+    });
+
+    const searchBtn = screen.getByRole('button', { name: /search/i });
+    await act(async () => userEvent.click(searchBtn));
+
+    const recipeCard = screen.getByTestId('0-recipe-card');
+    expect(recipeCard).toBeInTheDocument();
   });
 });
