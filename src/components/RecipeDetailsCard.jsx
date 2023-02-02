@@ -4,9 +4,9 @@ import RecipesCarousel from './RecipesCarousel';
 
 function RecipeDetailsCard({ recipe }) {
   const ingredients = recipe
-    .ingredients.filter((e) => e != null && e !== '');
+    .ingredients[0].filter((e) => e != null && e !== '' && e !== undefined);
   const measures = recipe
-    .measures.filter((e) => e != null && e !== '');
+    .measures[0].filter((e) => e != null && e !== '' && e !== undefined);
   // console.log('video', recipe.video);
 
   return (
@@ -23,9 +23,11 @@ function RecipeDetailsCard({ recipe }) {
       <h4>Ingredients</h4>
       <ul>
         {ingredients.map((e, index) => (
-          <li data-testid={ `${index}-ingredient-name-and-measure` } key={ index }>
-            {`${e} ${measures[index]}`}
-          </li>
+
+          e !== undefined && e !== null && (
+            <li data-testid={ `${index}-ingredient-name-and-measure` } key={ index }>
+              {`${e} ${measures[index]}`}
+            </li>)
         ))}
       </ul>
       <p data-testid="instructions">{recipe.instructions}</p>

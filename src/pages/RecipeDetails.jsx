@@ -1,13 +1,12 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import copy from 'clipboard-copy';
 import RecipeDetailsCard from '../components/RecipeDetailsCard';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
-import { AppContext } from '../context/AppProvider';
+import shareIcon from '../images/shareIcon.svg';
 
 function RecipeDetails() {
-  const { recipeDetailsContext, setRecipeDetailsContext } = useContext(AppContext);
   const [recipe, setRecipe] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [recomm, setRecomm] = useState('');
@@ -92,7 +91,6 @@ function RecipeDetails() {
         const data = await promise.json();
         // console.log('Data', data.meals[0]);
         setRecipe(data.meals[0]);
-        setRecipeDetailsContext(data.meals[0]);
       } finally {
         setIsLoading(false);
       }
@@ -106,14 +104,12 @@ function RecipeDetails() {
         const data = await promise.json();
         // console.log('Data', data.drinks[0]);
         setRecipe(data.drinks[0]);
-        setRecipeDetailsContext(data.drinks[0]);
       } finally {
         setIsLoading(false);
       }
     };
     // console.log('foodcheck', foodCheckMeal);
     // console.log('drinkcheck', drinksCheckMeal);
-    console.log('RECIPE DETAIL CTX', recipeDetailsContext);
     if (foodCheckMeal) getRecipeMeals();
     if (drinksCheckMeal) getRecipeDrinks();
     getRecomm();
@@ -129,8 +125,12 @@ function RecipeDetails() {
       <button
         data-testid="share-btn"
         onClick={ handleShareBtn }
+        src={ shareIcon }
       >
-        Share
+        <img
+          src={ shareIcon }
+          alt="shareButton"
+        />
       </button>
       <button
         data-testid="favorite-btn"
@@ -175,6 +175,7 @@ function RecipeDetails() {
             video: recipe.strYoutube?.replace('https://www.youtube.com/watch?v=', ''),
             recommendation: recomm,
             favorite: isFavorite,
+            done: isDone,
           } }
         />
       ) : (
@@ -204,6 +205,7 @@ function RecipeDetails() {
             isAlcoholic: recipe.strAlcoholic,
             recommendation: recomm,
             favorite: isFavorite,
+            done: isDone,
           } }
         />
       )}
