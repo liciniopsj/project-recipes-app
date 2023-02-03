@@ -1,5 +1,4 @@
-/* eslint-disable max-lines */
-/* eslint-disable react-func/max-lines-per-function */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import copy from 'clipboard-copy';
@@ -7,6 +6,8 @@ import RecipeDetailsCard from '../components/RecipeDetailsCard';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
+import { parseDrinkIngredientsData, parseDrinkMeasuresData,
+  parseMealIngredientsData, parseMealMeasuresData } from '../helpers/helpers';
 
 function RecipeInProgress() {
   const [recipe, setRecipe] = useState('');
@@ -26,13 +27,11 @@ function RecipeInProgress() {
     // console.log('ISFAVORITEFLAG', flavFlag);
   }
   const [isFavorite, setIsFavorite] = useState(flavFlag);
-  // console.log('ISFAVORITESTATE', isFavorite);
-  // console.log(location);
   const { pathname } = location;
-  // console.log('PATHNAME', location.pathname);
   const foodCheckMeal = !!pathname.includes('meals');
   const drinksCheckMeal = !!pathname.includes('drinks');
   const recipeType = recipe.idMeal ? 'meal' : 'drink';
+  console.log('LOADING', isLoading);
 
   const templateObject = {
     id: recipe.idMeal || recipe.idDrink,
@@ -58,14 +57,11 @@ function RecipeInProgress() {
     const amountToChop = -12;
     const currentURL = window.location.href;
     const choppedURL = currentURL.slice(0, amountToChop);
-    // console.log('CHOPPED URL', choppedURL);
     copy(choppedURL);
   };
 
   const handleFinishBtn = () => {
     setRecipeState(true);
-
-    // redirect user to done recipes page
     history.push('/done-recipes');
   };
 
@@ -74,12 +70,9 @@ function RecipeInProgress() {
 
     if (localStorage.getItem('favoriteRecipes')) {
       oldFavorite.push(...JSON.parse(localStorage.getItem('favoriteRecipes')));
-      // console.log('OLD FAVORITE 1', oldFavorite);
     }
 
     oldFavorite.push(templateObject);
-
-    // console.log('OLD FAVORITE 2', oldFavorite);
 
     localStorage.setItem(
       'favoriteRecipes',
@@ -87,96 +80,41 @@ function RecipeInProgress() {
         JSON.stringify(oldFavorite)),
     );
     setIsFavorite(!isFavorite);
-    // console.log('ISFAVORITE', isFavorite);
   };
 
+  const regex = /\d+/g;
   useEffect(() => {
     const getRecipeMeals = async () => {
-      const id = pathname.replace('/meals/', '');
-      const regex = /\d+/g;
-      const newID = id.match(regex);
-      // console.log('EXTRACTED ID', newID.toString());
+      const id = pathname.replace('/meals/', '').match(regex);
       setIsLoading(true);
       try {
-        const URL = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${newID}`;
-        // console.log('ENDPOINT', URL);
+        const URL = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
         const promise = await fetch(URL);
         const data = await promise.json();
-        // console.log('DATA', data);
         setRecipe(data.meals[0]);
-        setIngredients([data.meals[0].strIngredient1, data.meals[0].strIngredient2,
-          data.meals[0].strIngredient3, data.meals[0].strIngredient4,
-          data.meals[0].strIngredient5, data.meals[0].strIngredient6,
-          data.meals[0].strIngredient7, data.meals[0].strIngredient8,
-          data.meals[0].strIngredient9, data.meals[0].strIngredient10,
-          data.meals[0].strIngredient11, data.meals[0].strIngredient12,
-          data.meals[0].strIngredient13, data.meals[0].strIngredient14,
-          data.meals[0].strIngredient15, data.meals[0].strIngredient16,
-          data.meals[0].strIngredient17, data.meals[0].strIngredient18,
-          data.meals[0].strIngredient19, data.meals[0].strIngredient20]);
-        setMeasures([data.meals[0].strMeasure1, recipe.strMeasure2,
-          data.meals[0].strMeasure3, data.meals[0].strMeasure4,
-          data.meals[0].strMeasure5, data.meals[0].strMeasure6,
-          data.meals[0].strMeasure7, data.meals[0].strMeasure8,
-          data.meals[0].strMeasure9, data.meals[0].strMeasure10,
-          data.meals[0].strMeasure11, data.meals[0].strMeasure12,
-          data.meals[0].strMeasure13, data.meals[0].strMeasure14,
-          data.meals[0].strMeasure15, data.meals[0].strMeasure16,
-          data.meals[0].strMeasure17, data.meals[0].strMeasure18,
-          data.meals[0].strMeasure19, data.meals[0].strMeasure20]);
+        setIngredients(parseMealIngredientsData(data));
+        setMeasures(parseMealMeasuresData(data));
       } finally {
         setIsLoading(false);
       }
     };
     const getRecipeDrinks = async () => {
-      const id = pathname.replace('/drinks/', '');
-      const regex = /\d+/g;
-      const newID = id.match(regex);
-      // console.log('EXTRACTED ID', newID.toString());
+      const id = pathname.replace('/drinks/', '').match(regex);
       setIsLoading(true);
       try {
-        const URL = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${newID}`;
+        const URL = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
         const promise = await fetch(URL);
         const data = await promise.json();
-        // console.log('DATA', data.drinks[0]);
         setRecipe(data.drinks[0]);
-        setIngredients([data.drinks[0].strIngredient1, data.drinks[0].strIngredient2,
-          data.drinks[0].strIngredient3, data.drinks[0].strIngredient4,
-          data.drinks[0].strIngredient5, data.drinks[0].strIngredient6,
-          data.drinks[0].strIngredient7, data.drinks[0].strIngredient8,
-          data.drinks[0].strIngredient9, data.drinks[0].strIngredient10,
-          data.drinks[0].strIngredient11, data.drinks[0].strIngredient12,
-          data.drinks[0].strIngredient13, data.drinks[0].strIngredient14,
-          data.drinks[0].strIngredient15, data.drinks[0].strIngredient16,
-          data.drinks[0].strIngredient17, data.drinks[0].strIngredient18,
-          data.drinks[0].strIngredient19, data.drinks[0].strIngredient20]);
-        setMeasures([data.drinks[0].strMeasure1, recipe.strMeasure2,
-          data.drinks[0].strMeasure3, data.drinks[0].strMeasure4,
-          data.drinks[0].strMeasure5, data.drinks[0].strMeasure6,
-          data.drinks[0].strMeasure7, data.drinks[0].strMeasure8,
-          data.drinks[0].strMeasure9, data.drinks[0].strMeasure10,
-          data.drinks[0].strMeasure11, data.drinks[0].strMeasure12,
-          data.drinks[0].strMeasure13, data.drinks[0].strMeasure14,
-          data.drinks[0].strMeasure15, data.drinks[0].strMeasure16,
-          data.drinks[0].strMeasure17, data.drinks[0].strMeasure18,
-          data.drinks[0].strMeasure19, data.drinks[0].strMeasure20]);
-        // console.log('measures', measures);
-        // console.log('ingredients', ingredients);
+        setIngredients(parseDrinkIngredientsData(data));
+        setMeasures(parseDrinkMeasuresData(data));
       } finally {
         setIsLoading(false);
       }
     };
-    // console.log('foodcheck', foodCheckMeal);
-    // console.log('drinkcheck', drinksCheckMeal);
     if (foodCheckMeal) getRecipeMeals();
     if (drinksCheckMeal) getRecipeDrinks();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [drinksCheckMeal, foodCheckMeal, isFavorite]);
-
-  // console.log('Recomm', recomm);
-  // console.log('Recipe', recipe);
-  console.log('Loading', isLoading);
-  console.log('Ingredients', ingredients);
 
   return (
     <div>
@@ -205,7 +143,6 @@ function RecipeInProgress() {
       {
         drawSpan ? <span>Link copied!</span> : null
       }
-      {/* {foodCheckMeal ? <h1>{recipe.strMeal}</h1> : <h1>{recipe.strDrink}</h1>} */}
       {foodCheckMeal ? (
         <RecipeDetailsCard
           recipe={ {

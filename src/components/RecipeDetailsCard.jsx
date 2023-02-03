@@ -4,9 +4,9 @@ import RecipesCarousel from './RecipesCarousel';
 
 function RecipeDetailsCard({ recipe }) {
   const ingredients = recipe
-    .ingredients.filter((e) => e != null && e !== '' && e !== undefined);
+    .ingredients[0].filter((e) => e != null && e !== '' && e !== undefined);
   const measures = recipe
-    .measures.filter((e) => e != null && e !== '' && e !== undefined);
+    .measures[0].filter((e) => e != null && e !== '' && e !== undefined);
   // console.log('video', recipe.video);
 
   return (

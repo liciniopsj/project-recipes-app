@@ -5,10 +5,14 @@ import RecipeDetailsCard from '../components/RecipeDetailsCard';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
+import { parseDrinkIngredientsData, parseDrinkMeasuresData,
+  parseMealIngredientsData, parseMealMeasuresData } from '../helpers/helpers';
 
 function RecipeDetails() {
   const [recipe, setRecipe] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [ingredients, setIngredients] = useState([]);
+  const [measures, setMeasures] = useState([]);
   const [recomm, setRecomm] = useState('');
   const location = useLocation();
   const history = useHistory();
@@ -89,6 +93,8 @@ function RecipeDetails() {
         const promise = await fetch(URL);
         const data = await promise.json();
         setRecipe(data.meals[0]);
+        setIngredients(parseMealIngredientsData(data));
+        setMeasures(parseMealMeasuresData(data));
       } finally {
         setIsLoading(false);
       }
@@ -101,6 +107,8 @@ function RecipeDetails() {
         const promise = await fetch(URL);
         const data = await promise.json();
         setRecipe(data.drinks[0]);
+        setIngredients(parseDrinkIngredientsData(data));
+        setMeasures(parseDrinkMeasuresData(data));
       } finally {
         setIsLoading(false);
       }
@@ -115,7 +123,7 @@ function RecipeDetails() {
 
   // console.log('Recipe', recipe);
   // console.log('Recomm', recomm);
-  console.log('Loading', isLoading);
+  console.log('LOADING', isLoading);
 
   return (
     <div>
@@ -151,23 +159,8 @@ function RecipeDetails() {
             photo: recipe.strMealThumb,
             title: recipe.strMeal,
             category: recipe.strCategory,
-            ingredients: [recipe.strIngredient1, recipe.strIngredient2,
-              recipe.strIngredient3, recipe.strIngredient4,
-              recipe.strIngredient5, recipe.strIngredient6,
-              recipe.strIngredient7, recipe.strIngredient8,
-              recipe.strIngredient9, recipe.strIngredient10,
-              recipe.strIngredient11, recipe.strIngredient12,
-              recipe.strIngredient13, recipe.strIngredient14,
-              recipe.strIngredient15, recipe.strIngredient16,
-              recipe.strIngredient17, recipe.strIngredient18,
-              recipe.strIngredient19, recipe.strIngredient20],
-            measures: [recipe.strMeasure1, recipe.strMeasure2,
-              recipe.strMeasure3, recipe.strMeasure4, recipe.strMeasure5,
-              recipe.strMeasure6, recipe.strMeasure7, recipe.strMeasure8,
-              recipe.strMeasure9, recipe.strMeasure10, recipe.strMeasure11,
-              recipe.strMeasure12, recipe.strMeasure13, recipe.strMeasure14,
-              recipe.strMeasure15, recipe.strMeasure16, recipe.strMeasure17,
-              recipe.strMeasure18, recipe.strMeasure19, recipe.strMeasure20],
+            ingredients: [ingredients],
+            measures: [measures],
             instructions: recipe.strInstructions,
             video: recipe.strYoutube?.replace('https://www.youtube.com/watch?v=', ''),
             recommendation: recomm,
@@ -182,21 +175,8 @@ function RecipeDetails() {
             photo: recipe.strDrinkThumb,
             title: recipe.strDrink,
             category: recipe.strCategory,
-            ingredients: [recipe.strIngredient1, recipe.strIngredient2,
-              recipe.strIngredient3, recipe.strIngredient4,
-              recipe.strIngredient5, recipe.strIngredient6,
-              recipe.strIngredient7, recipe.strIngredient8,
-              recipe.strIngredient9, recipe.strIngredient10,
-              recipe.strIngredient11, recipe.strIngredient12,
-              recipe.strIngredient13, recipe.strIngredient14,
-              recipe.strIngredient15],
-            measures: [recipe.strMeasure1, recipe.strMeasure2,
-              recipe.strMeasure3, recipe.strMeasure4, recipe.strMeasure5,
-              recipe.strMeasure6, recipe.strMeasure7, recipe.strMeasure8,
-              recipe.strMeasure9, recipe.strMeasure10, recipe.strMeasure11,
-              recipe.strMeasure12, recipe.strMeasure13, recipe.strMeasure14,
-              recipe.strMeasure15, recipe.strMeasure16, recipe.strMeasure17,
-              recipe.strMeasure18, recipe.strMeasure19, recipe.strMeasure20],
+            ingredients: [ingredients],
+            measures: [measures],
             instructions: recipe.strInstructions,
             video: recipe.strYoutube?.replace('https://www.youtube.com/watch?v=', ''),
             isAlcoholic: recipe.strAlcoholic,
