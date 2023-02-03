@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import copy from 'clipboard-copy';
@@ -7,18 +8,22 @@ import blackHeartIcon from '../images/blackHeartIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
 import { parseDrinkIngredientsData, parseDrinkMeasuresData,
   parseMealIngredientsData, parseMealMeasuresData,
+  returnDoneTemplateObject,
   returnFavTemplateObject } from '../helpers/helpers';
 
-function RecipeDetails() {
+function RecipeInProgress() {
   const [recipe, setRecipe] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [ingredients, setIngredients] = useState([]);
   const [measures, setMeasures] = useState([]);
-  const [recomm, setRecomm] = useState('');
   const location = useLocation();
   const history = useHistory();
   const [drawSpan, setDrawSpan] = useState(false);
+  const [recipeState, setRecipeState] = useState(false);
   const recipeId = recipe.idMeal || recipe.idDrink;
+
+  console.log('RECIPE', recipe);
+
   let flavFlag = false;
   if (localStorage.getItem('favoriteRecipes')) {
     const favorite = JSON.parse(localStorage.getItem('favoriteRecipes'));
@@ -29,20 +34,9 @@ function RecipeDetails() {
   const { pathname } = location;
   const foodCheckMeal = !!pathname.includes('meals');
   const drinksCheckMeal = !!pathname.includes('drinks');
-  const recommDrinks = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
-  const recommMeals = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
-  const isDone = false;
-  const inProgress = JSON.parse(localStorage.getItem('inProgressRecipes'));
-  const recipeType = recipe.idMeal ? 'meal' : 'drink';
 
-  const templateObject = {
-    id: recipe.idMeal || recipe.idDrink,
-    type: recipeType,
-    nationality: recipe.strArea || '',
-    category: recipe.strCategory,
-    alcoholicOrNot: recipe.strAlcoholic || '',
-    name: recipe.strMeal || recipe.strDrink,
-    image: recipe.strMealThumb || recipe.strDrinkThumb };
+  const regex = /\d+/g;
+  console.log('LOADING', isLoading);
 
   // CSS
   const buttonStyle = {
@@ -52,16 +46,21 @@ function RecipeDetails() {
 
   const handleShareBtn = () => {
     setDrawSpan(!drawSpan);
-    copy(window.location.href);
+    const amountToChop = -12;
+    const currentURL = window.location.href;
+    const choppedURL = currentURL.slice(0, amountToChop);
+    copy(choppedURL);
   };
 
   const handleFavoriteBtn = () => {
     const oldFavorite = [];
 
     if (localStorage.getItem('favoriteRecipes')) {
-      oldFavorite.push(...JSON.parse(returnFavTemplateObject(recipe)));
+      oldFavorite.push(...JSON.parse(localStorage.getItem('favoriteRecipes')));
     }
-    oldFavorite.push(templateObject);
+
+    oldFavorite.push(returnFavTemplateObject(recipe));
+
     localStorage.setItem(
       'favoriteRecipes',
       (
@@ -70,15 +69,40 @@ function RecipeDetails() {
     setIsFavorite(!isFavorite);
   };
 
+  let values = [];
+  const handleCheckbox = (e) => {
+    const originalValues = Array.from(
+      document.querySelectorAll('input[type="checkbox"]'),
+    );
+    console.log('ORIGINAL', Array.from(originalValues));
+    values = Array.from(document.querySelectorAll('input[type="checkbox"]'))
+      .filter((checkbox) => checkbox.checked)
+      .map((checkbox) => checkbox.checked);
+    console.log('STATUS', values);
+
+    if (e.target.checked) {
+      e.target.parentElement.style = 'text-decoration: line-through solid rgb(0, 0, 0)';
+    } else {
+      e.target.parentElement.style = 'text-decoration: none solid rgb(0, 0, 0)';
+    }
+
+    if (values.length !== originalValues.length) {
+      setRecipeState(false);
+      setIsLoading(false);
+    } else if (values.length === originalValues.length) {
+      setRecipeState(true);
+    }
+  };
+
+  const handleFinishBtn = () => {
+    localStorage.setItem('doneRecipes', JSON.stringify(returnDoneTemplateObject(recipe)));
+
+    history.push('/done-recipes');
+  };
+
   useEffect(() => {
-    const getRecomm = async () => {
-      const recommUrl = foodCheckMeal ? recommDrinks : recommMeals;
-      const promise = await fetch(recommUrl);
-      const data = await promise.json();
-      setRecomm(data.meals || data.drinks);
-    };
     const getRecipeMeals = async () => {
-      const id = pathname.replace('/meals/', '');
+      const id = pathname.replace('/meals/', '').match(regex);
       setIsLoading(true);
       try {
         const URL = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
@@ -92,7 +116,7 @@ function RecipeDetails() {
       }
     };
     const getRecipeDrinks = async () => {
-      const id = pathname.replace('/drinks/', '');
+      const id = pathname.replace('/drinks/', '').match(regex);
       setIsLoading(true);
       try {
         const URL = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
@@ -107,14 +131,11 @@ function RecipeDetails() {
     };
     if (foodCheckMeal) getRecipeMeals();
     if (drinksCheckMeal) getRecipeDrinks();
-    getRecomm();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [drinksCheckMeal, foodCheckMeal, isFavorite, setIsFavorite]);
-
-  console.log('LOADING', isLoading);
+  }, [drinksCheckMeal, foodCheckMeal, isFavorite]);
 
   return (
     <div>
+      <h1>In-progress</h1>
       <button
         data-testid="share-btn"
         onClick={ handleShareBtn }
@@ -141,7 +162,6 @@ function RecipeDetails() {
       }
       {foodCheckMeal ? (
         <RecipeDetailsCard
-          handlefavoriteState={ handleFavoriteBtn }
           recipe={ {
             photo: recipe.strMealThumb,
             title: recipe.strMeal,
@@ -149,10 +169,8 @@ function RecipeDetails() {
             ingredients: [ingredients],
             measures: [measures],
             instructions: recipe.strInstructions,
-            video: recipe.strYoutube?.replace('https://www.youtube.com/watch?v=', ''),
-            recommendation: recomm,
+            recommendation: '',
             favorite: isFavorite,
-            done: isDone,
           } }
         />
       ) : (
@@ -165,27 +183,47 @@ function RecipeDetails() {
             ingredients: [ingredients],
             measures: [measures],
             instructions: recipe.strInstructions,
-            video: recipe.strYoutube?.replace('https://www.youtube.com/watch?v=', ''),
             isAlcoholic: recipe.strAlcoholic,
-            recommendation: recomm,
+            recommendation: '',
             favorite: isFavorite,
-            done: isDone,
           } }
         />
       )}
       <span>
+        {
+          ingredients !== null && ingredients
+            .filter((ingred) => (
+              ingred !== '' && ingred !== null && ingred !== undefined))
+            .map((ingred, index) => (
+              <>
+                <label
+                  key={ index }
+                  data-testid={ `${index}-ingredient-step` }
+                  htmlFor={ `${index}-ingred` }
+                >
+                  <input
+                    id={ `${index}-ingred` }
+                    type="checkbox"
+                    onChange={ (e) => handleCheckbox(e) }
+                  />
+                  { ingred.length > 0 && ingred }
+                </label>
+                <br />
+              </>
+            ))
+        }
+        <br />
         <button
           style={ buttonStyle }
-          data-testid="start-recipe-btn"
-          disabled={ isDone }
-          onClick={ () => history.push(`${recipeId}/in-progress`) }
+          data-testid="finish-recipe-btn"
+          disabled={ !recipeState }
+          onClick={ handleFinishBtn }
         >
-          { inProgress !== null ? 'Continue Recipe' : 'Start Recipe' }
-
+          Finish Recipe
         </button>
       </span>
     </div>
   );
 }
 
-export default RecipeDetails;
+export default RecipeInProgress;
