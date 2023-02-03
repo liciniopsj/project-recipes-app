@@ -6,7 +6,8 @@ import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
 import { parseDrinkIngredientsData, parseDrinkMeasuresData,
-  parseMealIngredientsData, parseMealMeasuresData } from '../helpers/helpers';
+  parseMealIngredientsData, parseMealMeasuresData,
+  returnFavTemplateObject } from '../helpers/helpers';
 
 function RecipeDetails() {
   const [recipe, setRecipe] = useState('');
@@ -58,7 +59,7 @@ function RecipeDetails() {
     const oldFavorite = [];
 
     if (localStorage.getItem('favoriteRecipes')) {
-      oldFavorite.push(...JSON.parse(localStorage.getItem('favoriteRecipes')));
+      oldFavorite.push(...JSON.parse(returnFavTemplateObject(recipe)));
     }
     oldFavorite.push(templateObject);
     localStorage.setItem(

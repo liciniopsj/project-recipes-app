@@ -7,7 +7,9 @@ import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
 import { parseDrinkIngredientsData, parseDrinkMeasuresData,
-  parseMealIngredientsData, parseMealMeasuresData } from '../helpers/helpers';
+  parseMealIngredientsData, parseMealMeasuresData,
+  returnDoneTemplateObject,
+  returnFavTemplateObject } from '../helpers/helpers';
 
 function RecipeInProgress() {
   const [recipe, setRecipe] = useState('');
@@ -20,6 +22,8 @@ function RecipeInProgress() {
   const [recipeState, setRecipeState] = useState(false);
   const recipeId = recipe.idMeal || recipe.idDrink;
 
+  console.log('RECIPE', recipe);
+
   let flavFlag = false;
   if (localStorage.getItem('favoriteRecipes')) {
     const favorite = JSON.parse(localStorage.getItem('favoriteRecipes'));
@@ -30,18 +34,9 @@ function RecipeInProgress() {
   const { pathname } = location;
   const foodCheckMeal = !!pathname.includes('meals');
   const drinksCheckMeal = !!pathname.includes('drinks');
-  const recipeType = recipe.idMeal ? 'meal' : 'drink';
+
   const regex = /\d+/g;
   console.log('LOADING', isLoading);
-
-  const templateObject = {
-    id: recipe.idMeal || recipe.idDrink,
-    type: recipeType,
-    nationality: recipe.strArea || '',
-    category: recipe.strCategory,
-    alcoholicOrNot: recipe.strAlcoholic || '',
-    name: recipe.strMeal || recipe.strDrink,
-    image: recipe.strMealThumb || recipe.strDrinkThumb };
 
   // CSS
   const buttonStyle = {
@@ -64,7 +59,7 @@ function RecipeInProgress() {
       oldFavorite.push(...JSON.parse(localStorage.getItem('favoriteRecipes')));
     }
 
-    oldFavorite.push(templateObject);
+    oldFavorite.push(returnFavTemplateObject(recipe));
 
     localStorage.setItem(
       'favoriteRecipes',
@@ -100,6 +95,8 @@ function RecipeInProgress() {
   };
 
   const handleFinishBtn = () => {
+    localStorage.setItem('doneRecipes', JSON.stringify(returnDoneTemplateObject(recipe)));
+
     history.push('/done-recipes');
   };
 

@@ -48,3 +48,35 @@ export const parseMealMeasuresData = (data) => (
     data.meals[0].strMeasure17, data.meals[0].strMeasure18,
     data.meals[0].strMeasure19, data.meals[0].strMeasure20]
 );
+
+export const returnFavTemplateObject = (data) => {
+  const recipeType = data.idMeal ? 'meal' : 'drink';
+  return {
+    id: data.idMeal || data.idDrink,
+    type: recipeType,
+    nationality: data.strArea || '',
+    category: data.strCategory,
+    alcoholicOrNot: data.strAlcoholic || '',
+    name: data.strMeal || data.strDrink,
+    image: data.strMealThumb || data.strDrinkThumb,
+  };
+};
+
+export const returnDoneTemplateObject = (data) => {
+  const recipeType = data.idMeal ? 'meal' : 'drink';
+  console.log(data);
+  const array = data.strTags !== null && data.strTags.split(',');
+  const dateNow = new Date();
+  const currDate = dateNow.toISOString();
+  return [{
+    id: data.idMeal || data.idDrink,
+    nationality: data.strArea || '',
+    name: data.strMeal || data.strDrink,
+    category: data.strCategory,
+    image: data.strMealThumb || data.strDrinkThumb,
+    tags: array || [],
+    alcoholicOrNot: data.strAlcoholic || '',
+    type: recipeType,
+    doneDate: currDate,
+  }];
+};
