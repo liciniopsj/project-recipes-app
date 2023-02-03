@@ -54,4 +54,24 @@ describe('Test Done Recipes page', () => {
     expect(pageTitle).not.toBeInTheDocument();
     expect(switchPageTitle).toBeInTheDocument();
   });
+
+  // test('if page gets handled correctly in case the route is different', () => {
+  //   const mockLocalStorage = (key, data) => {
+  //     window.localStorage.setItem(key, JSON.stringify(data));
+  //   };
+
+  //   const localDataMock = [{
+  //     alcoholicOrNot: 'Alcoholic',
+  //     category: 'Ordinary Drink',
+  //     id: '13940',
+  //     image: 'https://www.thecocktaildb.com/images/media/drink/vqyxqx1472669095.jpg',
+  //     name: '69 Special',
+  //     nationality: '',
+  //     type: 'drink',
+  //   }];
+
+  //   mockLocalStorage('doneRecipes', localDataMock);
+  //   const { history } = renderWithRouter(<App />, { initialEntries: [PAGEROUTE] });
+
+  // });
 });
