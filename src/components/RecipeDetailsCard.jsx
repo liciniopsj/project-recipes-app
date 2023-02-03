@@ -8,6 +8,8 @@ function RecipeDetailsCard({ recipe }) {
   const measures = recipe
     .measures[0].filter((e) => e != null && e !== '' && e !== undefined);
 
+  console.log('INGREDIENTS', recipe.ingredients[0]);
+
   return (
     <div>
       <h1 data-testid="recipe-title">{recipe.title}</h1>

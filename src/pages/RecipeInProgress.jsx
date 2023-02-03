@@ -13,7 +13,6 @@ function RecipeInProgress() {
   const [recipe, setRecipe] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [ingredients, setIngredients] = useState([]);
-  const [progress, setProgress] = useState([]);
   const [measures, setMeasures] = useState([]);
   const location = useLocation();
   const history = useHistory();
@@ -50,10 +49,6 @@ function RecipeInProgress() {
     bottom: '0px',
   };
 
-  const checkboxStyle = {
-    textDecoration: 'line-through solid rgb(0, 0, 0)',
-  };
-
   const handleShareBtn = () => {
     setDrawSpan(!drawSpan);
     const amountToChop = -12;
@@ -79,16 +74,32 @@ function RecipeInProgress() {
     setIsFavorite(!isFavorite);
   };
 
-  const handleCheckboxes = () => {
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+  let values = [];
+  const handleCheckbox = (e) => {
+    const originalValues = Array.from(
+      document.querySelectorAll('input[type="checkbox"]'),
+    );
+    console.log('ORIGINAL', Array.from(originalValues));
+    values = Array.from(document.querySelectorAll('input[type="checkbox"]'))
+      .filter((checkbox) => checkbox.checked)
+      .map((checkbox) => checkbox.checked);
+    console.log('STATUS', values);
 
-    checkboxes.forEach((c) => setProgress(...progress, c.checked));
+    if (e.target.checked) {
+      e.target.parentElement.style = 'text-decoration: line-through solid rgb(0, 0, 0)';
+    } else {
+      e.target.parentElement.style = 'text-decoration: none solid rgb(0, 0, 0)';
+    }
 
-    console.log(progress);
+    if (values.length !== originalValues.length) {
+      setRecipeState(false);
+      setIsLoading(false);
+    } else if (values.length === originalValues.length) {
+      setRecipeState(true);
+    }
   };
 
   const handleFinishBtn = () => {
-    setRecipeState(false);
     history.push('/done-recipes');
   };
 
@@ -189,15 +200,14 @@ function RecipeInProgress() {
             .map((ingred, index) => (
               <>
                 <label
-                  data-testid={ `${index}-ingredient-step` }
                   key={ index }
+                  data-testid={ `${index}-ingredient-step` }
                   htmlFor={ `${index}-ingred` }
                 >
                   <input
                     id={ `${index}-ingred` }
                     type="checkbox"
-                    style={ checkboxStyle }
-                    onChange={ handleCheckboxes }
+                    onChange={ (e) => handleCheckbox(e) }
                   />
                   { ingred.length > 0 && ingred }
                 </label>
