@@ -34,8 +34,6 @@ function SearchBar() {
       }
     };
     handleSingleResults();
-    // console.log(resultsApiContext);
-    // console.log(mockedValueMeals);
   }, [history, resultsApiContext]);
 
   const handleSearchBtn = async () => {
@@ -56,10 +54,8 @@ function SearchBar() {
     }
     const response = await fetch(url);
     const result = await response.json();
-    // console.log(result);
     setApiResults({ ...apiResults, ...result });
     setResultsApiContext({ ...apiResults, ...result });
-    // console.log(resultsApiContext);
   };
   return (
     <div>

@@ -23,11 +23,8 @@ function RecipeDetails() {
     const favorite = JSON.parse(localStorage.getItem('favoriteRecipes'));
     flavFlag = favorite
       .some((fav) => fav.idMeal === recipeId || fav.idDrink === recipeId);
-    // console.log('ISFAVORITEFLAG', flavFlag);
   }
   const [isFavorite, setIsFavorite] = useState(flavFlag);
-  // console.log('ISFAVORITESTATE', isFavorite);
-  // console.log(location);
   const { pathname } = location;
   const foodCheckMeal = !!pathname.includes('meals');
   const drinksCheckMeal = !!pathname.includes('drinks');
@@ -62,20 +59,14 @@ function RecipeDetails() {
 
     if (localStorage.getItem('favoriteRecipes')) {
       oldFavorite.push(...JSON.parse(localStorage.getItem('favoriteRecipes')));
-      // console.log('OLD FAVORITE 1', oldFavorite);
     }
-
     oldFavorite.push(templateObject);
-
-    // console.log('OLD FAVORITE 2', oldFavorite);
-
     localStorage.setItem(
       'favoriteRecipes',
       (
         JSON.stringify(oldFavorite)),
     );
     setIsFavorite(!isFavorite);
-    // console.log('ISFAVORITE', isFavorite);
   };
 
   useEffect(() => {
@@ -113,16 +104,12 @@ function RecipeDetails() {
         setIsLoading(false);
       }
     };
-    // console.log('foodcheck', foodCheckMeal);
-    // console.log('drinkcheck', drinksCheckMeal);
     if (foodCheckMeal) getRecipeMeals();
     if (drinksCheckMeal) getRecipeDrinks();
     getRecomm();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [drinksCheckMeal, foodCheckMeal, isFavorite, setIsFavorite]);
 
-  // console.log('Recipe', recipe);
-  // console.log('Recomm', recomm);
   console.log('LOADING', isLoading);
 
   return (
@@ -151,7 +138,6 @@ function RecipeDetails() {
       {
         drawSpan ? <span>Link copied!</span> : null
       }
-      {/* {foodCheckMeal ? <h1>{recipe.strMeal}</h1> : <h1>{recipe.strDrink}</h1>} */}
       {foodCheckMeal ? (
         <RecipeDetailsCard
           handlefavoriteState={ handleFavoriteBtn }

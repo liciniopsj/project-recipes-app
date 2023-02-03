@@ -13,24 +13,26 @@ function RecipeInProgress() {
   const [recipe, setRecipe] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [ingredients, setIngredients] = useState([]);
+  const [progress, setProgress] = useState([]);
   const [measures, setMeasures] = useState([]);
   const location = useLocation();
   const history = useHistory();
   const [drawSpan, setDrawSpan] = useState(false);
   const [recipeState, setRecipeState] = useState(false);
   const recipeId = recipe.idMeal || recipe.idDrink;
+
   let flavFlag = false;
   if (localStorage.getItem('favoriteRecipes')) {
     const favorite = JSON.parse(localStorage.getItem('favoriteRecipes'));
     flavFlag = favorite
       .some((fav) => fav.idMeal === recipeId || fav.idDrink === recipeId);
-    // console.log('ISFAVORITEFLAG', flavFlag);
   }
   const [isFavorite, setIsFavorite] = useState(flavFlag);
   const { pathname } = location;
   const foodCheckMeal = !!pathname.includes('meals');
   const drinksCheckMeal = !!pathname.includes('drinks');
   const recipeType = recipe.idMeal ? 'meal' : 'drink';
+  const regex = /\d+/g;
   console.log('LOADING', isLoading);
 
   const templateObject = {
@@ -60,11 +62,6 @@ function RecipeInProgress() {
     copy(choppedURL);
   };
 
-  const handleFinishBtn = () => {
-    setRecipeState(true);
-    history.push('/done-recipes');
-  };
-
   const handleFavoriteBtn = () => {
     const oldFavorite = [];
 
@@ -82,7 +79,19 @@ function RecipeInProgress() {
     setIsFavorite(!isFavorite);
   };
 
-  const regex = /\d+/g;
+  const handleCheckboxes = () => {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+    checkboxes.forEach((c) => setProgress(...progress, c.checked));
+
+    console.log(progress);
+  };
+
+  const handleFinishBtn = () => {
+    setRecipeState(false);
+    history.push('/done-recipes');
+  };
+
   useEffect(() => {
     const getRecipeMeals = async () => {
       const id = pathname.replace('/meals/', '').match(regex);
@@ -188,6 +197,7 @@ function RecipeInProgress() {
                     id={ `${index}-ingred` }
                     type="checkbox"
                     style={ checkboxStyle }
+                    onChange={ handleCheckboxes }
                   />
                   { ingred.length > 0 && ingred }
                 </label>

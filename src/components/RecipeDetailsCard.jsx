@@ -7,7 +7,6 @@ function RecipeDetailsCard({ recipe }) {
     .ingredients[0].filter((e) => e != null && e !== '' && e !== undefined);
   const measures = recipe
     .measures[0].filter((e) => e != null && e !== '' && e !== undefined);
-  // console.log('video', recipe.video);
 
   return (
     <div>
