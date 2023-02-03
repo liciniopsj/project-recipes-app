@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 import Header from './Header';
 import RecipeCard from './RecipeCard';
 import { AppContext } from '../context/AppProvider';
@@ -9,7 +9,7 @@ export default function Drinks() {
   const { resultsApiContext } = useContext(AppContext);
   const [dataDefault, setDataDefault] = useState();
   const renderLimit = 12;
-  const history = useHistory();
+  // const history = useHistory();
   const drawSearchIcon = true;
 
   useEffect(() => {
@@ -22,19 +22,13 @@ export default function Drinks() {
     fetchDefaultApi();
   }, []);
 
-  const drawHeader = () => {
-    if (history.location.pathname === '/drinks') {
-      return true;
-    }
-  };
-
   if (!dataDefault) {
     return <p>Carregando...</p>;
   }
   return (
     <>
       <div>
-        {drawHeader() ? <Header title="Drinks" hasSearchIcon={ drawSearchIcon } /> : null}
+        <Header title="Drinks" hasSearchIcon={ drawSearchIcon } />
         <div>
           { resultsApiContext.drinks === null
             || resultsApiContext.drinks.length === 0 ? dataDefault
@@ -58,9 +52,7 @@ export default function Drinks() {
               )) }
         </div>
       </div>
-      {
-        drawHeader() ? <Footer /> : null
-      }
+      <Footer />
     </>
   );
 }

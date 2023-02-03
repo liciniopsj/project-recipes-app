@@ -9,8 +9,8 @@ function RecipeCard({ recipeName, recipeImg, recipeId, recipeRoute }) {
 
   // CSS
   const imgStyle = {
-    width: '350px',
-    height: '600px',
+    width: '310px',
+    height: '250px',
   };
 
   return (
@@ -18,13 +18,13 @@ function RecipeCard({ recipeName, recipeImg, recipeId, recipeRoute }) {
       onClick={ () => history.push(`${route}/${recipeRoute}`) }
       data-testid={ `${recipeId}-recipe-card` }
     >
+      <p data-testid={ `${recipeId}-card-name` }><strong>{ recipeName }</strong></p>
       <img
         src={ recipeImg }
         alt={ recipeName }
         style={ imgStyle }
         data-testid={ `${recipeId}-card-img` }
       />
-      <p data-testid={ `${recipeId}-card-name` }><strong>{ recipeName }</strong></p>
     </button>
   );
 }

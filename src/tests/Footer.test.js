@@ -4,8 +4,12 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import renderWithRouter from './helpers/renderWithRouter';
 import App from '../App';
+import { mockedDefaultMeals } from './helpers/mocks/MockedDefaultMeals';
+import { mockedDefaultDrinks } from './helpers/mocks/MockedDefaultDrinks';
 
 describe('Test Footer page', () => {
+  const email = 'teste@teste.com';
+
   beforeEach(() => {
     const setLocalStorage = (id, data) => {
       window.localStorage.setItem(id, JSON.stringify(data));
@@ -13,7 +17,7 @@ describe('Test Footer page', () => {
     };
     jest.spyOn(global, 'fetch');
     global.fetch.mockResolvedValue({
-      json: jest.fn().mockResolvedValue(setLocalStorage('user', 'teste@teste.com')),
+      json: jest.fn().mockResolvedValue(setLocalStorage('user', email)),
     });
   });
 
@@ -47,6 +51,16 @@ describe('Test Footer page', () => {
 
     userEvent.click(drinkButton);
 
+    const setLocalStorage = (id, data) => {
+      window.localStorage.setItem(id, JSON.stringify(data));
+      return data;
+    };
+    jest.spyOn(global, 'fetch');
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue(setLocalStorage('user', email))
+        .mockResolvedValue(mockedDefaultDrinks),
+    });
+
     await act(() => renderWithRouter(
       <App />,
       { initialEntries: ['/drinks'] },
@@ -69,6 +83,16 @@ describe('Test Footer page', () => {
     expect(mealButton).toBeInTheDocument();
 
     userEvent.click(mealButton);
+
+    const setLocalStorage = (id, data) => {
+      window.localStorage.setItem(id, JSON.stringify(data));
+      return data;
+    };
+    jest.spyOn(global, 'fetch');
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue(setLocalStorage('user', email))
+        .mockResolvedValue(mockedDefaultMeals),
+    });
 
     await act(() => renderWithRouter(
       <App />,

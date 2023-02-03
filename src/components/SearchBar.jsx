@@ -16,11 +16,18 @@ function SearchBar() {
   useEffect(() => {
     const handleSingleResults = async () => {
       if (resultsApiContext.meals && resultsApiContext.meals.length === 1) {
-        history.push(`${history.location.pathname}/${resultsApiContext.meals[0].idMeal}`);
+        const { location: { pathname } } = history;
+        const { idMeal } = resultsApiContext.meals[0];
+        history
+          .push(`${pathname}/${idMeal}`, idMeal);
       }
       if (resultsApiContext.drinks && resultsApiContext.drinks.length === 1) {
+        const { location: { pathname } } = history;
+        const { idDrink } = resultsApiContext.drinks[0];
         history
-          .push(`${history.location.pathname}/${resultsApiContext.drinks[0].idDrink}`);
+          .push(`${pathname}/${idDrink}`, idDrink);
+        // history
+        //   .push(`${history.location.pathname}/${resultsApiContext.drinks[0].idDrink}`);
       }
       if (resultsApiContext.meals === null || resultsApiContext.drinks === null) {
         global.alert('Sorry, we haven\'t found any recipes for these filters.');
@@ -49,7 +56,7 @@ function SearchBar() {
     }
     const response = await fetch(url);
     const result = await response.json();
-    console.log(result);
+    // console.log(result);
     setApiResults({ ...apiResults, ...result });
     setResultsApiContext({ ...apiResults, ...result });
     // console.log(resultsApiContext);
